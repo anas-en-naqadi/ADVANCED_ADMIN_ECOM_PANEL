@@ -12,8 +12,13 @@ class BlacklistController extends Controller
 {
     public function index()
     {
+        $cacheKey = 'blacklists';
+        $cacheData = getCachedData($cacheKey, function () {
         $blacklists = Blacklist::with('user')->get();
-        return response()->json($blacklists);
+        return $blacklists;
+        });
+        return response()->json($cacheData);
+
     }
 
 
@@ -27,7 +32,7 @@ class BlacklistController extends Controller
         $user->status = 'blocked';
         $user->save();
         $blacklist = Blacklist::create($validatedData);
-
+        cache()->forget('blacklists');
         return $blacklist ? response()->json(['message' => 'Added to blacklist successfully'],200)
             : response()->json(['message' => 'Oops something went wrong'],402);
     }

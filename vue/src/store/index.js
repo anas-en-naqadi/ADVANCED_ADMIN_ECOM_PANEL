@@ -35,8 +35,6 @@ const store = createStore({
                 .post("/logout")
                 .then((res) => {
                     commit("DELETE_USER");
-
-                    sessionStorage.removeItem("TOKEN");
                     return res;
                 })
                 .catch((error) => {
@@ -144,9 +142,32 @@ const store = createStore({
                 return error;
             }
         },
+      async  getStockStatistics(){
+        try {
+            const response = await axiosClient.get("/stock-by-category");
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    },
         async getMonthlySales() {
             try {
                 const response = await axiosClient.get("/monthlySales");
+                return response.data;
+            } catch (error) {
+                return error;
+            }
+        },async getThisMonthSales() {
+            try {
+                const response = await axiosClient.get("/this-month");
+                return response.data;
+            } catch (error) {
+                return error;
+            }
+        },
+        async getUserRegistrations() {
+            try {
+                const response = await axiosClient.get("/user-registrations");
                 return response.data;
             } catch (error) {
                 return error;
@@ -240,6 +261,23 @@ const store = createStore({
                 return error;
             }
         },
+        async updateShipping({ commit }, {address,shipping_id}) {
+            try {
+                const response = await axiosClient.put("/shipping/"+shipping_id, address);
+                return response;
+            } catch (error) {
+                return error;
+            }
+        },
+        async storeShipping({ commit }, {address,shipping_id}) {
+            try {
+                const response = await axiosClient.post("/shipping", address);
+                return response;
+            } catch (error) {
+                return error;
+            }
+        },
+
         async storeInvoice({ commit }, invoice) {
             try {
                 const response = await axiosClient.post("/invoice", invoice);
@@ -287,7 +325,7 @@ const store = createStore({
                 .post("/blacklist", { user_id, reason })
                 .then((res) => res).catch((error) => error)
         },
-       
+
         async storeMultipleImages({ commit },  {images,product_id}) {
             try {
                 const response = await axiosClient.post("/more-images", {images,product_id});
@@ -382,7 +420,9 @@ const store = createStore({
         },
         DELETE_USER(state) {
             sessionStorage.removeItem("TOKEN");
-            state.user.token = "";
+            state.user.data = {};
+            state.user.token = null;
+
         },
     },
     modules: {},

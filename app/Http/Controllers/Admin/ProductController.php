@@ -17,15 +17,19 @@ class ProductController extends Controller
 {
     public function index()
     {
+        $cacheKey = 'products';
+        $cacheData = getCachedData($cacheKey, function () {
         $products = Product::with('reviews', 'category')->latest()->get();
-      
+
         foreach ($products as $product) {
             if (!empty($product->image)) {
                 $product->image = URL::to($product->image);
             }
 
         }
-        return response()->json($products);
+        return $products;
+    });
+    return response()->json($cacheData);
     }
 
 
@@ -42,6 +46,7 @@ class ProductController extends Controller
         }
         // $validatedData['user_id'] = getSimpleUser()->id;
         Product::create($validatedData);
+        cache()->forget('key');
         return response()->json(['message' => 'Product added successfully']);
     }
 
@@ -63,7 +68,7 @@ class ProductController extends Controller
 
         // Update the product
         $product->update($validatedData);
-
+        cache()->forget('key');
         return response()->json(['message' => 'product item updated successfully']);
     }
 

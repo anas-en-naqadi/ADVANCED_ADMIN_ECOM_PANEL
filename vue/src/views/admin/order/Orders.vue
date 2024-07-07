@@ -21,8 +21,10 @@
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-5">
-                            <input v-model="date.start_date" type="date"  class="xl:w-[12rem] p-2 border-gray-300  focus:border-blue-500" />
-                            <input v-model="date.end_date" type="date" class="p-2 xl:w-[12rem] focus:border-blue-500 border-gray-300 " />
+                            <input v-model="date.start_date" type="date"
+                                class="xl:w-[12rem] p-2 border-gray-300  focus:border-blue-500" />
+                            <input v-model="date.end_date" type="date"
+                                class="p-2 xl:w-[12rem] focus:border-blue-500 border-gray-300 " />
 
                             <Button type="button" icon="pi pi-filter-slash" label="Filter"
                                 class="p-button-outlined bg-white py-2 px-4 border border-green-500 rounded-md text-green-800 hover:text-white hover:bg-green-500"
@@ -37,22 +39,22 @@
 
                 <template #empty>No orders list found.</template>
                 <!-- Columns -->
-                <Column field="id" header="ID" class="text-center"></Column>
-                <Column field="user" header="User Name" class="text-center">
+                <Column field="id" header="ID" class="border-b-[1px] text-center"></Column>
+                <Column field="user" header="User Name" class="border-b-[1px] text-center">
                     <template #body="{ data }">
                         <span>{{ data.customer.name }}</span>
                     </template>
                 </Column>
 
-                <Column field="payment.payment_method" class="text-center" header="Methode de paiement">
+                <Column field="payment.payment_method" class="border-b-[1px] text-center" header="Methode de paiement">
                     <template #body="{ data }">
                         <span v-if="data.payment">{{ data.payment.payment_method }}</span>
                     </template>
                 </Column>
 
-                <Column field="status" class="text-center" header="Status">
+                <Column field="status" class="border-b-[1px] text-center" header="Status">
                     <template #body="{ data }">
-                        <span class="rounded-md p-1.5 text-gray-200 text-xs " :class="[
+                        <span class="rounded-md px-1.5 py-1 text-gray-200 text-xs " :class="[
                             data.status === 'canceled'
                                 ? 'bg-red-500'
                                 : data.status === 'processing'
@@ -65,21 +67,22 @@
                     </template>
                 </Column>
 
-                <Column field="amount" class="text-center" header="Total">
+                <Column field="amount" class="border-b-[1px] text-center" header="Total">
                     <template #body="{ data }">
                         <span>{{ common.formatNumber(data.amount) }} DH</span>
                     </template>
                 </Column>
-                <Column field="created_at" class="text-center" header="creer a">
+                <Column field="created_at" class="border-b-[1px] text-center" header="creer a">
                     <template #body="{ data }">
                         <span>{{ common.formatDate(data.created_at) }}</span>
                     </template>
                 </Column>
 
-                <Column header="Actions" class="text-center">
+                <Column header="Actions" class="border-b-[1px] text-center">
                     <template #body="{ data }">
                         <div class="flex gap-3">
-                            <button @click="showOrder(data.id)" title="Show this order" class="text-center">
+                            <button @click="showOrder(data.id)" title="Show this order"
+                                class="text-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-blue-500">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -88,6 +91,14 @@
                                         d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                 </svg>
                             </button>
+                            <button @click="showOrder(data.id)" title="download it as invoice"
+                                class="text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-green-500">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+</svg>
+                            </button>
+
+
                         </div>
                     </template>
                 </Column>
@@ -161,28 +172,28 @@ const loading = ref(true);
 const orders = ref([]);
 const router = useRouter();
 const date = ref({});
-const toast =useToast();
+const toast = useToast();
 const filteredOrders = ref([]);
 onMounted(() => {
     fetchOrders();
 });
-function filterOrders(){
-    store.dispatch("filterByDates",{date:date.value,type:"order"}).then((res)=>{
+function filterOrders() {
+    store.dispatch("filterByDates", { date: date.value, type: "order" }).then((res) => {
 
-        if(res.status ===200 && res.data )
-        filteredOrders.value =[...res.data];
-        if (res.response && res.response.status === 422){
+        if (res.status === 200 && res.data)
+            filteredOrders.value = [...res.data];
+        if (res.response && res.response.status === 422) {
 
-[...Object.values(res.response.data.errors)].forEach((e) => {
-      toast.add({
-        severity: "error",
-        summary: "Error",
-        detail: e[0],
-        life: 3000,
-      });
-    });
-    }
-    }).catch(error=>error);
+            [...Object.values(res.response.data.errors)].forEach((e) => {
+                toast.add({
+                    severity: "error",
+                    summary: "Error",
+                    detail: e[0],
+                    life: 3000,
+                });
+            });
+        }
+    }).catch(error => error);
 }
 function fetchOrders() {
     store

@@ -19,8 +19,10 @@ class InvoiceService
         try {
             // Create the invoice
             $invoice = new Invoice();
-            $invoice->user_id = $validatedData['user_id']; // Replace with actual user ID logic
+            $invoice->user_id = getSimpleUser()->id;
+            $invoice->to_customer = $validatedData['user_id'];
             $invoice->total = 0;
+
             $invoice->status = $validatedData['status'];
             $invoice->due_date = $validatedData['due_date'];
             $invoice->save();
@@ -64,7 +66,8 @@ class InvoiceService
             // Delete existing sells associated with the invoice
             $invoice->sells()->delete();
 
-             $invoice->user_id = $validatedData['user_id']; // Replace with actual user ID logic
+             $invoice->user_id = getSimpleUser()->id;
+             $invoice->to_customer = $validatedData['user_id'];
              $invoice->total = 0;
              $invoice->status = $validatedData['status'];
              $invoice->due_date = $validatedData['due_date'];

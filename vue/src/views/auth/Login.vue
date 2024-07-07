@@ -1,6 +1,16 @@
+<style scoped>
+@media only screen and (max-width: 550px) {
+
+#container{
+    width:80%;
+}
+
+}
+</style>
 <template>
   <div
-    class="flex mt-[2rem] mb-[4rem] shadow-md  bg-white border border-gray-200 xl:w-[25%] lg:w-[40%] w-[50%] mx-auto rounded-md flex-col justify-center px-6 py-12 lg:px-8"
+  id="container"
+    class="flex mt-[2rem] mb-[4rem] shadow-md  bg-white border border-gray-200 xl:w-[25%] lg:w-[40%] md:w-[40%] sm:w-[50%] w-[50%] mx-auto rounded-md flex-col justify-center px-6 py-12 lg:px-8"
   >
     <div class="sm:mx-auto sm:w-full sm:max-w-sm sm:max-h-sm -mt-12">
       <img

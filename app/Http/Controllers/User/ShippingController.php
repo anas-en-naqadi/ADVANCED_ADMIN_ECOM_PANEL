@@ -24,8 +24,14 @@ class ShippingController extends Controller
         CleanInputs($validatedData);
 
         $validatedData['user_id'] = getSimpleUser()->id;
-        Shipping::create($validatedData);
-        return response()->json(['message' => 'addresse ajoute avec success']);
+
+      $shipping =  Shipping::create($validatedData);
+      
+      if(getSimpleUser()->shippings->count() === 1)
+{        $shipping->default = true ;
+        $shipping->save();
+}
+    return response()->json(['message' => 'addresse ajoute avec success']);
     }
 
     public function update(ShippingRequest $request, shipping $shipping)

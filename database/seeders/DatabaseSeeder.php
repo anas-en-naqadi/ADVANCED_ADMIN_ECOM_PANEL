@@ -24,21 +24,21 @@ class DatabaseSeeder extends Seeder
 
         //  \App\Models\ProductImages::query()->delete();
 
-        //  \App\Models\User::factory(10)->create();
-        // \App\Models\Category::factory(10)->create();
-        //  \App\Models\Product::factory(20)->create();
+        //  \App\Models\User::factory(200)->create();
+        // \App\Models\Category::factory(15)->create();
+        //  \App\Models\Product::factory(1000)->create();
         // \App\Models\Cart::factory(10)->create();
-        // \App\Models\Shipping::factory(10)->create();
-        //   \App\Models\Order::factory(20)->create();
-    //  \App\Models\Payment::factory(20)->create();
-        //  \App\Models\OrderItems::factory(10)->create();
-        // \App\Models\WishList::factory(10)->create();
-        // \App\Models\ProductImages::factory(10)->create();
-        //  \App\Models\Review::factory(30)->create();
+        // \App\Models\Shipping::factory(200)->create();
+        //   \App\Models\Order::factory(220)->create();
+    //  \App\Models\Payment::factory(220)->create();
+    //      \App\Models\OrderItems::factory(300)->create();
+    //     \App\Models\WishList::factory(10)->create();
+    //     \App\Models\ProductImages::factory(100)->create();
+    //      \App\Models\Review::factory(30)->create();
         // \App\Models\Comment::factory(20)->create();
-       // \App\Models\Sell::factory(20)->create();
-        // \App\Models\Invoice::factory(12)->create();
-        //  \App\Models\OrderItems::factory(22)->create();
+        \App\Models\Invoice::factory(200)->create();
+       \App\Models\Sell::factory(350)->create();
+
 
 
 

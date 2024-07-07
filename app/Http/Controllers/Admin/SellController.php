@@ -12,11 +12,15 @@ class SellController extends Controller
 {
 
     public function sells(){
+        $cacheKey = 'sells';
+        $cacheData = getCachedData($cacheKey, function () {
         $sells = Sell::with('product')->get()->map(function ($sell){
             $sell->product->image = URL::to($sell->product->image);
             return $sell;
         });
-        return response()->json($sells);
+        return $sells;
+    });
+    return response()->json($cacheData);
     }
 
     public function filterSellsByDates(Request $request){

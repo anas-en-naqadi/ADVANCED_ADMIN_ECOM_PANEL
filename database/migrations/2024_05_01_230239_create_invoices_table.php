@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('total', 16, 2)->notNull();
             $table->string("due_date")->notNull();
             $table->string("status")->notNUll();
+            $table->foreignId('to_customer')->constrained('users')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

@@ -13,8 +13,13 @@ class CategoryController extends Controller
 
     public function index()
     {
+        $cacheKey = 'categories';
+        $cacheData = getCachedData($cacheKey, function () {
         $categories = Category::all();
-        return response()->json($categories);
+        return $categories;
+        });
+        return response()->json($cacheData);
+
     }
 
     public function store(CategoryRequest $request)
@@ -23,6 +28,8 @@ class CategoryController extends Controller
         $validatedData = $request->validated();
         CleanInputs($validatedData);
         $category =  Category::create($validatedData);
+        cache()->forget('categories');
+
         return $category ? response()->json('new category added successfully !!',200) : response()->json('oops, something went wrong!!',500);
     }
 
@@ -31,6 +38,8 @@ class CategoryController extends Controller
         try {
             $category = Category::findOrFail($id);
             $category->delete();
+            cache()->forget('categories');
+
             return response()->json(['message' => 'la categorie a ete supprime avec success']);
         } catch (ModelNotFoundException $message) {
             return response()->json(['message' => 'Oops, something went wrong !!']);

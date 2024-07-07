@@ -69,7 +69,7 @@
           style="min-width: 12rem"
         >
           <template #body="{ data }">
-            <avatar :fullname="data.name" :size="70"></avatar>
+            <avatar :fullname="data.name" :size="63"></avatar>
           </template>
         </Column>
         <Column
@@ -78,10 +78,16 @@
           header="Name"
         ></Column>
         <Column
+          field="email"
+          class="border-b-[1px]"
+          header="Email"
+        ></Column>
+        <Column
           field="status"
           class="border-b-[1px] text-center"
           header="Status"
-          style="min-width: 12rem"
+          style="min-width: 8rem"
+          sortable
         >
           <template #body="{ data }">
             <span
@@ -101,7 +107,8 @@
           field="is_admin"
           class="border-b-[1px] text-center"
           header="Role"
-          style="min-width: 12rem"
+          style="min-width: 6rem"
+          sortable
         >
           <template #body="{ data }">
             <span
@@ -111,15 +118,12 @@
             >
           </template>
         </Column>
-        <Column
-          field="email"
-          class="border-b-[1px] text-center"
-          header="Email"
-        ></Column>
+
         <Column
           field="created_at"
-          class="border-b-[1px] text-center"
+          class="border-b-[1px] text-center w-full"
           header="creer a"
+          sortable
         >
           <template #body="{ data }">
             <span>{{ common.formatDate(data.created_at) }}</span>
@@ -242,7 +246,7 @@
             <Skeleton></Skeleton>
           </template>
         </Column>
-        <Column field="name" header="Name" class="text-center">
+        <Column field="name" header="Name" class="text-center flex items-center justify-center">
           <template #body>
             <Skeleton shape="circle" size="5rem"></Skeleton>
           </template>
@@ -306,7 +310,7 @@
       v-model:visible="visible2"
       modal
       header="Ajouter nouveau utilisateur"
-      :style="{ width: '50rem' }"
+      :style="{ width: '50%' }"
     >
       <div id="profile" class="flex flex-wrap -mx-3 pb-2">
         <div class="w-full md:w-6/12 px-3 mb-4">
@@ -368,11 +372,11 @@
             <option value="1">admin</option>
           </select>
         </div>
-        <div class="w-full flex-1 text-right">
+        <div class="w-full flex-1 -mb-4 mt-3">
           <Button
             @click="newUser"
             label="Add"
-            class="text-white bg-blue-500 text-sm px-4 py-1 rounded-md"
+            class="text-white bg-blue-500 text-sm  py-2 hover:bg-blue-900 w-full rounded-md"
           />
         </div>
       </div>

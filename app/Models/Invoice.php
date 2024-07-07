@@ -10,13 +10,13 @@ class Invoice extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $fillable = ['user_id','total','due_date','status'];
+    protected $fillable = ['user_id','total','due_date','status','to_customer'];
 
     public function sells()
     {
         return $this->hasMany(Sell::class);
     }
     public function customer(){
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class,'to_customer');
     }
 }

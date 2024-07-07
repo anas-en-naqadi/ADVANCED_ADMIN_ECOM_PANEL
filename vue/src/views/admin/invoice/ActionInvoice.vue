@@ -25,8 +25,8 @@
                 <img class="w-[10rem] h-[8rem] rounded-md ltr:mr-2 rtl:ml-2"
                   src="@/assets/images/olive.png" /><span>Al Mobarka</span>
               </div>
-              <p class="text-sm">
-                Hay el matar, Oussat el jadida<br />El jadida, 24000, Morocco
+              <p v-if="user.default_shipping_address" class="text-sm -mt-4 ml-10">
+               {{ user.default_shipping_address.address }}<br />{{ user.default_shipping_address.city }}, {{ user.default_shipping_address.postal_code }}, {{ user.default_shipping_address.country }}
               </p>
             </div>
             <div class="text-4xl uppercase font-bold text-green-800">
@@ -187,7 +187,7 @@
 
 
 <script setup>
-import { ref, onMounted, computed, watch, watchEffect } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import common from "../../../utils/common";
 import store from "../../../store";
@@ -196,6 +196,8 @@ const route = useRoute();
 const customers = ref([]);
 const customer = ref([]);
 const toast = useToast();
+const user = computed(() => store.state.user.data);
+
 const router = useRouter();
 const rows = ref([{ product_id: 0, quantity: 0, price: 0, amount: 0 }]);
 const invoice = ref({

@@ -1,8 +1,15 @@
 <template>
   <div class="card mt-12 m-6 bg-white border border-gray-300 rounded-xl">
-    <h2 class="mb-3 text-2xl font-extrabold tracking-tight text-gray-900 p-8">
-      List of categories
-    </h2>
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="mb-3 text-2xl font-extrabold tracking-tight text-gray-900 p-8">
+        List of categories
+      </h2>
+      <Button
+        @click="visible=true"
+        label="+ nouveau category"
+        class="p-button-outlined h-10 bg-white py-2 px-3 mr-6 border border-black rounded-md text-black hover:text-white hover:bg-black"
+      />
+    </div>
 
     <!-- Main Data Table -->
 
@@ -51,19 +58,19 @@
         </template>
         <template #empty>No categories list found.</template>
         <!-- Columns -->
-        <Column field="id" header="ID"></Column>
-        <Column field="category_name" header="Categorie" class="text-center">
+        <Column field="id" header="ID"           class="border-b-[1px] text-center"></Column>
+        <Column field="category_name" header="Categorie"           class="border-b-[1px] text-center" >
           <template #body="{ data }">
             <span>{{ data.category_name }}</span>
           </template>
         </Column>
 
-        <Column field="created_at" class="text-center" header="Cree a" sortable>
+        <Column field="created_at"  header="Cree a" sortable           class="border-b-[1px] text-center">
           <template #body="{ data }">
             <span>{{ common.formatDate(data.created_at) }}</span>
           </template>
         </Column>
-        <Column header="Actions" class="text-center">
+        <Column header="Actions"           class="border-b-[1px] text-center">
           <template #body="{ data }">
             <div class="flex gap-3">
               <button
@@ -143,20 +150,20 @@
           </div>
         </template>
 
-        <Column field="id" header="ID" class="text-center">
+        <Column field="id" header="ID" >
           <template #body> <Skeleton></Skeleton> </template
         ></Column>
-        <Column field="Category_name" header="Categorie" class="text-center">
+        <Column field="Category_name" header="Categorie" >
           <template #body>
             <Skeleton></Skeleton>
           </template>
         </Column>
-        <Column field="" class="text-center" header="Cree a">
+        <Column field=""  header="Cree a">
           <template #body>
             <Skeleton></Skeleton>
           </template>
         </Column>
-        <Column field="" class="text-center" header="Actions">
+        <Column field=""  header="Actions">
           <template #body>
             <Skeleton></Skeleton>
           </template>
@@ -185,7 +192,8 @@
         />
       </div>
 
-      <button
+      <div class="w-full">
+        <button
         id="action_button"
         type="button"
         @click="addCategory"
@@ -193,7 +201,9 @@
       >
         {{ category.id ? "Modifier" : "Ajouter" }}
       </button>
+      </div>
     </Dialog>
+    <Toast />
   </div>
 </template>
 
@@ -201,11 +211,13 @@
 import common from "../../utils/common";
 import { ref, onMounted } from "vue";
 import store from "../../store";
+import { useToast } from "primevue/usetoast";
 const categories = ref([]);
 const loading = ref(true);
 const filteredCategories = ref([]);
 const visible = ref(false);
-let category_name = "";
+const toast = useToast();
+let category_name = null;
 const category = ref([]);
 onMounted(() => {
   fetchCategories();
@@ -250,12 +262,25 @@ function addCategory() {
   store
     .dispatch("storeCategory", category_name)
     .then((res) => {
+        console.dir(res);
       if (res.status === 200 && res.data) {
         visible.value = false;
         common.showToast({ title: res.data, icon: "success" });
+        fetchCategories()
       }
+      if (res.response && res.response.status === 422){
+        console.log(res.response);
+[...Object.values(res.response.data.errors)].forEach((e) => {
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: e[0],
+        life: 3000,
+      });
+    });
+    }
     })
-    .catch((error) => common.showToast({ title: error.data, icon: "error" }));
+    .catch((error) => error);
 }
 
 function deleteCategory(id) {

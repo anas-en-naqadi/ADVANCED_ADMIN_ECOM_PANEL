@@ -17,8 +17,11 @@ class InvoiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
+            'user_id' => 1,
+            'to_customer' => \App\Models\User::inRandomOrder()->first()->id,
             'total' => $this->faker->randomFloat(),
+            'due_date' => $this->faker->date(),
+            'status' => $this->faker->randomElement(['paid','pending'])
         ];
     }
 }

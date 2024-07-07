@@ -6,17 +6,141 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Sell;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    private const colors = [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(255, 159, 64, 0.2)',    // February
+        'rgba(255, 205, 86, 0.2)',    // March
+        'rgba(75, 192, 192, 0.2)',    // April
+        'rgba(54, 162, 235, 0.2)',    // May
+        'rgba(153, 102, 255, 0.2)',   // June
+        'rgba(201, 203, 207, 0.2)',   // July
+        'rgba(255, 99, 132, 0.2)',    // August
+        'rgba(255, 159, 64, 0.2)',    // September
+        'rgba(255, 205, 86, 0.2)',    // October
+        'rgba(75, 192, 192, 0.2)',    // November
+        'rgba(54, 162, 235, 0.2)',    // December
+    ];
+
+    private const borderColors = [
+        'rgb(255, 99, 132)',    // January
+        'rgb(255, 159, 64)',    // February
+        'rgb(255, 205, 86)',    // March
+        'rgb(75, 192, 192)',    // April
+        'rgb(54, 162, 235)',    // May
+        'rgb(153, 102, 255)',   // June
+        'rgb(201, 203, 207)',   // July
+        'rgb(255, 99, 132)',    // August
+        'rgb(255, 159, 64)',    // September
+        'rgb(255, 205, 86)',    // October
+        'rgb(75, 192, 192)',    // November
+        'rgb(54, 162, 235)',    // December
+    ];
+
+
+
+    public function monthlyUserRegistrations()
+    {
+        $cacheKey = 'monthly_user_registration';
+        $cacheData = getCachedData($cacheKey, function () {
+        $currentYear = Carbon::now()->year;
+
+        $userRegistrations = User::whereYear('created_at', $currentYear)
+            ->selectRaw('MONTHNAME(created_at) as month_name, COUNT(*) as user_count')
+            ->groupByRaw('MONTHNAME(created_at)')
+            ->orderByRaw('MONTH(created_at)')
+            ->get();
+
+        $labels = $userRegistrations->pluck('month_name')->toArray();
+        $data = $userRegistrations->pluck('user_count')->toArray();
+
+       return[
+            'labels' => $labels,
+            'data' => $data,
+        ];
+    });
+    return response()->json($cacheData);
+    }
+    public function getStockByCategory()
+    {
+        $cacheKey = 'stock_by_category';
+        $cacheData = getCachedData($cacheKey, function () {
+        $stockAndProductCountByCategory = Product::join('categories', 'products.category_id', '=', 'categories.id')
+            ->select(DB::raw('categories.category_name as category_name, SUM(products.quantity) as total_stock, COUNT(products.id) as product_count'))
+            ->groupBy('categories.category_name')
+            ->get();
+
+        $labels = $stockAndProductCountByCategory->pluck('category_name')->toArray();
+        $totalStock = $stockAndProductCountByCategory->pluck('total_stock')->toArray();
+        $productCount = $stockAndProductCountByCategory->pluck('product_count')->toArray();
+
+        // Example colors, adjust as needed
+        $backgroundColor1 = '#36a2eb'; // Total Stock
+        $backgroundColor2 = '#ffcd56'; // Product Count
+
+        return [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Total Stock',
+                    'backgroundColor' => $backgroundColor1,
+                    'data' => $totalStock,
+                ],
+                [
+                    'label' => 'Product Count',
+                    'backgroundColor' => $backgroundColor2,
+                    'data' => $productCount,
+                ],
+            ],
+        ];
+    });
+    return response()->json($cacheData);
+    }
+
+    public function getMonthlySales()
+    {
+        $cacheKey = 'monthly_sales';
+        $cacheData = getCachedData($cacheKey, function () {
+            // Get the first and last day of the current month
+            $firstDayOfMonth = Carbon::now()->startOfMonth()->toDateString();
+            $lastDayOfMonth = Carbon::now()->endOfMonth()->toDateString();
+
+            // Example query to retrieve sales data for the current month
+            $monthlySales = Sell::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
+                ->orderBy('created_at')
+                ->get(['created_at', 'total_amount']); // Adjust fields as per your database structure
+
+            // Prepare the response data
+            $labels = $monthlySales->map(function ($sale) {
+                return Carbon::parse($sale->created_at)->format('d/M'); // Format 'created_at' to get day/month
+            })->toArray();
+            $data = $monthlySales->pluck('total_amount')->toArray(); // Assuming 'amount' is the field for sales values
+
+            return [
+                'labels' => $labels,
+                'data' => $data,
+                'colors' => Self::colors,
+                'borderColors' => Self::borderColors
+            ];
+        });
+        return response()->json($cacheData);
+    }
     public function orderStatusPieChart()
     {
+        $cacheKey = 'order_status';
+        $cacheData = getCachedData($cacheKey, function () {
         // Retrieve counts of orders with different statuses
-        $returnedCount = Order::where('status', 'completed')->count();
-        $confirmedCount = Order::where('status', 'processing')->count();
-        $canceledCount = Order::where('status', 'in progress')->count();
+        $returnedCount = Order::where('status', 'returned')->count();
+        $confirmedCount = Order::where('status', 'confirmed')->count();
+        $canceledCount = Order::where('status', 'canceled')->count();
+
 
         // Calculate total number of orders
         $totalCount = $returnedCount + $confirmedCount + $canceledCount;
@@ -28,22 +152,30 @@ class DashboardController extends Controller
             $canceledPercentage = $canceledCount / $totalCount * 100;
         } else {
             // Set percentages to 0 if there are no orders
-            $returnedPercentage = 0;
-            $confirmedPercentage = 0;
-            $canceledPercentage = 0;
+            $returnedPercentage = 0.1;
+            $confirmedPercentage = 0.1;
+            $canceledPercentage = 0.1;
         }
 
         // Prepare data for the pie chart
         $labels = ['Returned', 'Confirmed', 'Canceled'];
         $data = [$returnedPercentage, $confirmedPercentage, $canceledPercentage];
 
-        $colors = ['#FF0000', '#00FF00', '#0000FF']; // Red, Green, Blue
+        $colorsStatus = [
+            'rgba(255, 99, 132, 0.4)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+        ]; // Red, Green, Blue
 
         // Return the data
-        return response()->json(['labels' => $labels, 'data' => $data, 'backgroundColor' => $colors]);
+        return ['labels' => $labels, 'data' => $data, 'backgroundColor' => $colorsStatus];
+    });
+    return response()->json($cacheData);
     }
     public function dashboardData()
     {
+        $cacheKey = 'dashboard_data';
+        $cacheData = getCachedData($cacheKey, function () {
         $todayMoney = Order::whereDate('created_at', today())->sum('amount');
         $todaysUsers = User::whereDate('created_at', today())->count();
         $newClients = Order::whereDate('created_at', today())->distinct()->count('user_id');
@@ -86,9 +218,13 @@ class DashboardController extends Controller
             'thisWeekSalesAmount' => $thisWeekSalesAmount,
             'salesWeekChange' => $salesWeekChange,
         ];
+    });
+    return response()->json($cacheData);
     }
     public function weeklySalesChart()
     {
+        $cacheKey = 'weekly_sales';
+        $cacheData = getCachedData($cacheKey, function () {
         // Get the current week's start and end dates
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = Carbon::now()->endOfWeek();
@@ -111,6 +247,8 @@ class DashboardController extends Controller
             'Sunday' => 0,
         ];
 
+
+
         // Fill in the actual sales data for days where sales exist
         foreach ($weeklySales as $sale) {
             $salesData[$sale->day_name] = $sale->total_sales;
@@ -120,14 +258,19 @@ class DashboardController extends Controller
         $labels = array_keys($salesData);
         $data = array_values($salesData);
 
-        return response()->json(['labels' => $labels, 'data' => $data]);
+        return ['labels' => $labels, 'data' => $data, 'colors' => Self::colors, 'borderColors' => Self::borderColors];
+    });
+    return response()->json($cacheData);
     }
 
 
 
 
-    public function monthlySalesChart()
+
+    function monthlySalesChart()
     {
+        $cacheKey = 'monthly_sales_Chart';
+        $cacheData = getCachedData($cacheKey, function () {
         // Get the current year
         $currentYear = Carbon::now()->year;
 
@@ -154,6 +297,7 @@ class DashboardController extends Controller
             'December' => 0,
         ];
 
+
         // Fill in the actual sales data for months where sales exist
         foreach ($monthlySales as $sale) {
             $salesData[$sale->month_name] = $sale->total_sales;
@@ -163,6 +307,9 @@ class DashboardController extends Controller
         $labels = array_keys($salesData);
         $data = array_values($salesData);
 
-        return response()->json(['labels' => $labels, 'data' => $data]);
+
+      return ['labels' => $labels, 'data' => $data, 'colors' => Self::colors, 'borderColors' => Self::borderColors];
+    });
+    return response()->json($cacheData);
     }
 }

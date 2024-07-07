@@ -35,10 +35,7 @@ class AuthController extends Controller
         }
     }
 
-    public function getLoggedUser()
-    {
-        return Auth::user()->load('defaultShippingAddress');
-    }
+
 
     public function register(RegisterRequest $request)
     {
@@ -71,12 +68,7 @@ class AuthController extends Controller
     public function logout()
     {
         $user = getSimpleUser();
-    
-        if ($user) {
             $user->currentAccessToken()->delete();
-            dd("test");
-        }
-    
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 }

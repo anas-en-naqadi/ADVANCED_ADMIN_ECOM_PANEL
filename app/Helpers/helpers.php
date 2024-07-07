@@ -17,7 +17,18 @@ function getSimpleUser()
 {
    return Auth::check() ? Auth::user() : null ;
 }
+ function getCachedData($cacheKey, $callback)
+{
+    if (cache()->has($cacheKey)) {
+        return cache()->get($cacheKey);
+    }
 
+    $data = $callback();
+
+    cache()->put($cacheKey, $data, now()->addMinutes(60)); // Cache for 60 minutes
+
+    return $data;
+}
 function storeImage($image)
 {
     if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {

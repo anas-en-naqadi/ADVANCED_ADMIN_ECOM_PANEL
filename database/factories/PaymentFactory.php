@@ -18,7 +18,6 @@ class PaymentFactory extends Factory
     {
         return [
             'order_id' => \App\Models\Order::inRandomOrder()->first()->id,
-            'paypal_transaction_id' => $this->faker->randomElement([null,$this->faker->randomNumber()]),
             'payment_method' => $this->faker->randomElement(['paypal','cod']),
             'amount' => $this->faker->randomFloat()
         ];

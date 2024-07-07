@@ -20,8 +20,13 @@ class OrderController extends Controller
 {
     public function index()
     {
+        $cacheKey = 'orders';
+        $cacheData = getCachedData($cacheKey, function () {
         $orders = Order::with(['payment', 'customer'])->get();
-        return response()->json($orders);
+        return $orders;
+        });
+        return response()->json($cacheData);
+
     }
 
     public function show($id)
@@ -142,7 +147,7 @@ class OrderController extends Controller
     {
 
         $status = $request->status;
-        CleanInputs($status);
+
 
         $order = Order::findOrFail($request->id);
 

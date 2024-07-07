@@ -1,7 +1,7 @@
 <template>
-  <div class="card mt-12 m-6 bg-gray-200 border border-gray-300 rounded-xl">
+  <div class="card mt-2 m-3 bg-gray-50  rounded-xl">
     <div
-      class="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto"
+      class="py-14 px-4 md:px-6 2xl:px-5 2xl:container 2xl:mx-auto"
       v-if="!loading"
     >
       <div class="flex justify-start item-start space-y-2 flex-col">
@@ -23,44 +23,40 @@
           class="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8"
         >
           <div
-            class="flex flex-col gap-10 justify-start items-start white:bg-gray-800 bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full"
+            class="flex rounded-md flex-col gap-10 justify-start items-start white:bg-gray-800 bg-white px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full"
           >
             <p
               class="text-lg md:text-xl white:text-white font-semibold leading-6 xl:leading-5 text-gray-800"
             >
               Status de commande
             </p>
-            <div class="w-full">
-              <Steps :model="items" class="custom-steps" :readonly="false">
-                <template #item="{ item, index }">
-                  {{ active }}
-                  <div
-                    class="flex flex-col gap-2 items-center justify-center"
-                    @click="handleStepClick(index)"
-                  >
-                    <span
-                      :class="[
-                        'flex flex-col justify-center items-center border border-green-500 rounded-full border-1 h-[3rem] w-[3rem] z-1 cursor-pointer',
-                        {
-                          'bg-green-400 text-white': item.active,
-                          'text-green-500 bg-white': !item.active,
-                        },
-                      ]"
-                    >
-                      <i :class="[item.icon, 'text-x']" />
-                    </span>
-                    <span>{{ item.label }}</span>
-                  </div>
-                  <hr
-                    v-if="index != 3"
-                    class="w-44 ml-2 mt-6 border-2 border-green-500"
-                  />
-                </template>
-              </Steps>
-            </div>
+            <div class="w-full ">
+    <Steps :model="items" class="custom-steps " :readonly="false">
+      <template #item="{ item, index }">
+        <div class="flex items-center justify-center gap-4">
+          <div class="flex flex-col items-center" @click="handleStepClick(index)">
+            <span
+              :class="[
+                'flex items-center justify-center border border-green-500 rounded-full h-12 w-12 cursor-pointer',
+                {
+                  'bg-green-400 text-white': item.active,
+                  'text-green-500 bg-white': !item.active,
+                },
+              ]"
+            >
+              <i :class="[item.icon, 'text-lg']"></i>
+            </span>
+            <span>{{ item.label }}</span>
+          </div>
+        </div>
+      </template>
+    </Steps>
+  </div>
+
+
           </div>
           <div
-            class="flex flex-col justify-start items-start white:bg-gray-800 bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full"
+            class="flex flex-col justify-start items-start white:bg-gray-800 bg-white rounded-md px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full"
           >
             <p
               class="text-lg md:text-xl white:text-white font-semibold leading-6 xl:leading-5 text-gray-800"
@@ -86,7 +82,7 @@
                     <th scope="col" class="px-6 py-3">discount</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="order.items.length">
                   <tr
                     v-for="item in order.items"
                     :key="item.id"
@@ -123,6 +119,12 @@
                     </td>
                   </tr>
                 </tbody>
+                <tbody v-else>
+                  <tr><td class="h-4"></td></tr>
+                    <tr >
+        <td class="text-red-500 text-center" colspan="6">No products in this order</td>
+    </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -130,7 +132,7 @@
             class="flex justify-center flex-col md:flex-row  items-stretch w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8"
           >
             <div
-              class="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-gray-50 white:bg-gray-800 space-y-6"
+              class="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white rounded-md white:bg-gray-800 space-y-6"
             >
               <h3
                 class="text-xl white:text-white font-semibold leading-5 text-gray-800"
@@ -191,7 +193,7 @@
               </div>
             </div>
             <div
-              class="flex flex-col justify-center px-4 py-6 md:p-6 xl:p-8 w-full bg-gray-50 white:bg-gray-800 space-y-6"
+              class="flex flex-col justify-center px-4 py-6 md:p-6 xl:p-8 w-full bg-white rounded-md white:bg-gray-800 space-y-6"
             >
               <h3
                 class="text-xl white:text-white font-semibold leading-5 text-gray-800"
@@ -234,7 +236,7 @@
           </div>
         </div>
         <div
-          class="bg-gray-50 white:bg-gray-800 w-full xl:w-96 flex justify-between items-center md:items-start px-4 py-6 md:p-6 xl:p-8 flex-col"
+          class="bg-white rounded-md white:bg-gray-800 w-full xl:w-96 flex justify-between items-center md:items-start px-4 py-6 md:p-6 xl:p-8 flex-col"
         >
           <h3
             class="text-xl white:text-white font-semibold leading-5 text-gray-800"
@@ -282,7 +284,7 @@
                   />
                 </svg>
 
-                <p class="cursor-pointer text-sm leading-5">
+                <p class="cursor-pointer text-sm leading-5 -mt-1.5">
                   {{ order.customer.email }}
                 </p>
               </div>
@@ -305,9 +307,9 @@
                     <p
                       class="w-48 lg:w-full white:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600"
                     >
-                      {{ order.customer.defaultShippingAddress.address }}, {{ order.customer.defaultShippingAddress.city }}
-                      {{ order.customer.defaultShippingAddress.country }}
-                      {{ order.customer.defaultShippingAddress.postal_code }}
+                      {{ order.customer.default_shipping_address.address }}, {{ order.customer.default_shipping_address.city }}
+                      {{ order.customer.default_shipping_address.country }}
+                      {{ order.customer.default_shipping_address.postal_code }}
                     </p>
                   </div>
                 </div>
@@ -514,7 +516,7 @@
               <div
                 class="flex justify-center w-full md:justify-start items-center space-x-4 py-8 border-b border-gray-200"
               >
-                <Skeleton size="4rem"></Skeleton>
+                <Skeleton size="5rem" shape="circle"></Skeleton>
                 <Skeleton></Skeleton>
               </div>
 
@@ -583,7 +585,7 @@ const order = ref({});
 const route = useRoute();
 const loading = ref(true);
 let items = [
-  { label: "Order Placed", icon: "pi pi-shopping-cart", active: false },
+  { label: "Placed", icon: "pi pi-shopping-cart", active: false },
   { label: "Processing", icon: "pi pi-cog", active: false },
   { label: "Shipped", icon: "pi pi-send", active: false },
   { label: "Delivered", icon: "pi pi-check-circle", active: false },

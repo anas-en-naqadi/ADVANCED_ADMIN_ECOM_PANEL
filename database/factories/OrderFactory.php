@@ -18,8 +18,7 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => \App\Models\User::inRandomOrder()->first()->id,
-            'shipping_id' => \App\Models\Shipping::inRandomOrder()->first()->id,
-            'status' => $this->faker->randomElement(['canceled', 'processing','returned', 'completed']),
+            'status' => $this->faker->randomElement(['canceled', 'confirmed','returned']),
             'amount' => $this->faker->randomFloat()
         ];
     }

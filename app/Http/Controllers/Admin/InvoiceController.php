@@ -25,20 +25,21 @@ class InvoiceController extends Controller
     }
     public function index()
     {
+        $cacheKey = 'invoices';
+        $cacheData = getCachedData($cacheKey, function () {
         // Retrieve invoices with sells and customer relationship
-        $invoices = Invoice::with(['sells', 'customer'])
-            ->get()
+        $invoices = Invoice::get()
             ->map(function ($invoice) {
-
                 // Add additional attributes to the invoice object
                 $invoice->sell_count = $invoice->sells->count();
                 $invoice->customer_name = $invoice->customer->name;
-                unset($invoice->sells);
-                unset($invoice->customer);
                 return $invoice;
             });
 
-        return response()->json($invoices);
+        return $invoices;
+        });
+        return response()->json($cacheData);
+
     }
 
 
@@ -48,6 +49,7 @@ class InvoiceController extends Controller
         $validatedData = $request->validated();
 
       $response =  $this->invoiceService->storeInvoice($validatedData);
+      cache()->forget('categories');
         return $response;
 
     }
@@ -79,6 +81,8 @@ class InvoiceController extends Controller
         $validatedData = $request->validated();
 
     $response =  $this->invoiceService->updateInvoice($validatedData,$request->id);
+    cache()->forget('categories');
+
     return $response;
     }
 

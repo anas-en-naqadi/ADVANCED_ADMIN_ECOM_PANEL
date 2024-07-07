@@ -1,5 +1,5 @@
 <template>
-    <div class="card mt-12 m-6 bg-gray-100 border border-gray-300 rounded-xl">
+    <div class="card mt-12 m-6 bg-gray-50rounded-xl">
         <!-- row -->
         <div class="flex flex-wrap flex-row">
             <div id="title-invoice" class="flex justify-between max-w-full px-4 py-4 w-full">
@@ -20,24 +20,30 @@
                 <div class="p-6 bg-white white:bg-gray-800 rounded-lg shadow-lg">
                     <div
                         class="flex flex-col md:flex-row sm:flex-row justify-between items-center pb-4 border-b border-gray-200  mb-3">
-                        <div class="flex items-center mb-3 md:mb-0">
+                        <div class="flex flex-col items-star mb-3 md:mb-0">
+                           <div class="flex items-center mb-3 md:mb-0">
                             <img class="w-24 h-24 md:w-[10rem] md:h-[8rem] mr-2 ml-2" src="@/assets/images/olive.png" />
                             <span class="text-3xl font-bold mb-1">Al Mobarka</span>
+                           </div>
+                            <p v-if="user.default_shipping_address" class="text-sm -mt-4 ml-10">
+               {{ user.default_shipping_address.address }}<br />{{ user.default_shipping_address.city }}, {{ user.default_shipping_address.postal_code }}, {{ user.default_shipping_address.country }}
+              </p>
                         </div>
+
                         <div class="text-4xl uppercase 2xl:-mt-4 md:-mt-4 sm:-mt-4 font-bold text-green-800">Facture
                         </div>
+
                     </div>
                     <div class="flex flex-row justify-between py-3">
                         <div class="flex-1">
-                            <p v-if="invoice.customer.defaultShippingAddress">
+                            <p v-if="invoice.customer.default_shipping_address">
                                 <strong class="text-green-700 text-lg">Bill to:</strong><br />
                                 {{ invoice.customer.name }}<br />
-                                {{ invoice.customer.defaultShippingAddress.address }}<br />
-                                {{ invoice.customer.defaultShippingAddress.city }},
-                                {{ invoice.customer.defaultShippingAddress.postal_code }},
-                                {{ invoice.customer.defaultShippingAddress.country }}<br />
-                                {{ invoice.customer.email }}<br />
-                                +123 456 7890
+                                {{ invoice.customer.default_shipping_address.address }}<br />
+                                {{ invoice.customer.default_shipping_address.city }},
+                                {{ invoice.customer.default_shipping_address.postal_code }},
+                                {{ invoice.customer.default_shipping_address.country }}<br />
+
                             </p>
                             <span class="text-red-600 text-sm" v-else>No addrress included !!</span>
                             <div v-if="invoice.customer">
@@ -274,7 +280,7 @@ import jsPDF from "jspdf";
 const invoice = ref({});
 const route = useRoute();
 const loading = ref(true);
-const user = computed(() => store.state.user);
+const user = computed(() => store.state.user.data);
 const pdf = ref(null);
 onMounted(() => {
     fetchInvoiceById();
