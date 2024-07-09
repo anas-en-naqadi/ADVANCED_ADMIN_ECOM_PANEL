@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\URL;
 use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 
@@ -19,14 +20,14 @@ function getSimpleUser()
 }
  function getCachedData($cacheKey, $callback)
 {
-    if (cache()->has($cacheKey)) {
-        return cache()->get($cacheKey);
+    if (Redis::exists($cacheKey)) {
+        return json_decode(Redis::get($cacheKey));
     }
 
     $data = $callback();
 
-    cache()->put($cacheKey, $data, now()->addMinutes(60)); // Cache for 60 minutes
-
+    Redis::set($cacheKey, json_encode($data));
+    Redis::expire($cacheKey, 60 * 60);
     return $data;
 }
 function storeImage($image)

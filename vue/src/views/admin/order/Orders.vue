@@ -59,9 +59,11 @@
                                 ? 'bg-red-500'
                                 : data.status === 'processing'
                                     ? 'bg-orange-500'
-                                    : data.status === 'returned'
+                                    :( data.status === 'returned'
                                         ? 'bg-blue-500'
-                                        : 'bg-green-500',
+                                        : (data.status==='completed' ?
+                                            'bg-green-500' : 'bg-indigo-500'
+                                        )),
                         ]">{{ data.status }}
                         </span>
                     </template>

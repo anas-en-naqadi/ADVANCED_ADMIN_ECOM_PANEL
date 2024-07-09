@@ -146,13 +146,14 @@ class OrderController extends Controller
     public function changeOrderStatus(Request $request)
     {
 
-        $status = $request->status;
+        $status = $request->validate(['status'=>'required|string']);
 
 
         $order = Order::findOrFail($request->id);
 
         if ($order) {
             $order->status = $status;
+            $order->save();
             return response()->json(['message' => 'Status a ete change avec success'], 200);
         } else {
             return response()->json(['message' => 'Erreur !!'], 422);

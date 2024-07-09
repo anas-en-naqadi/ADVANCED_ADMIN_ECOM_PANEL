@@ -271,15 +271,15 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 import store from "../../../store";
 import common from "../../../utils/common";
-
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 const invoice = ref({});
 const route = useRoute();
 const loading = ref(true);
+const router = useRouter();
 const user = computed(() => store.state.user.data);
 const pdf = ref(null);
 onMounted(() => {
@@ -295,6 +295,9 @@ function fetchInvoiceById() {
                 invoice.value = res.data;
                 console.dir(invoice.value);
             }
+            if (res.response && res.response.status === 404) {
+            router.push({ name: 'notFound' });
+          }
         })
         .catch((error) => console.error(error))
         .finally(() => {

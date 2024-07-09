@@ -635,7 +635,7 @@ const counter = ref(0);
 const notifiable = ref(false);
 
 onMounted(() => {
-  fetchNotifications();
+    fetchNotifications();
   store.dispatch("getLoggedUser");
 });
 function   redirectTo(url) {

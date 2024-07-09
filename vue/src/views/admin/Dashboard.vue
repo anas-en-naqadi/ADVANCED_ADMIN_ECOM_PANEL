@@ -40,7 +40,7 @@
                         </p>
                         <p v-else
                             class="flex items-center antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                            <strong v-if="statistics.moneyChange" class="text-red-500">+{{ statistics.moneyChange
+                            <strong v-if="statistics.moneyChange" class="text-red-500">{{ statistics.moneyChange
                                 }}%</strong><strong v-else class="text-red-500 mr-1.5">
                                 <Skeleton width="3rem"></Skeleton>
                             </strong>&nbsp;than last week
@@ -84,7 +84,7 @@
                         </p>
                         <p v-else
                             class="flex items-center antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                            <strong v-if="statistics.usersChange" class="text-red-500">+{{ statistics.usersChange
+                            <strong v-if="statistics.usersChange" class="text-red-500">{{ statistics.usersChange
                                 }}%</strong>
                             <strong v-else class="text-red-500 mr-1.5">
                                 <Skeleton width="3rem"></Skeleton>
@@ -128,7 +128,7 @@
                         </p>
                         <p v-else
                             class="flex items-center antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                            <strong v-if="statistics.newClientsChange" class="text-red-500">+{{
+                            <strong v-if="statistics.newClientsChange" class="text-red-500">{{
                                 statistics.newClientsChange }}%</strong>
                             <strong v-else class="text-red-500 mr-1.5">
                                 <Skeleton width="3rem"></Skeleton>
@@ -177,7 +177,7 @@
                         </p>
                         <p v-else
                             class="flex items-center antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                            <strong v-if="statistics.salesAmountChange" class="text-red-500">+{{
+                            <strong v-if="statistics.salesAmountChange" class="text-red-500">{{
                                 statistics.salesAmountChange }}%</strong>
                             <strong v-else class="text-red-500 mr-1.5">
                                 <Skeleton width="3rem"></Skeleton>
@@ -328,8 +328,8 @@
                         </div>
                         <div class="flex flex-col mt-3 items-center justify-center">
                             <div class="overflow-x-auto">
-                                <div class="align-middle inline-block min-w-full">
-                                    <div class="shadow overflow-hidden sm:rounded-lg">
+                                <div class="align-middle inline-block w-full">
+                                    <div class="shadow overflow-hidden w-full">
                                         <div>
                                             <Doughnut
                                                 v-if="orderStatus.labels && orderStatus.data && orderStatus.backgroundColor"

@@ -12,6 +12,7 @@ use App\Models\Sell;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Services\InvoiceService;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\URL;
 
 class InvoiceController extends Controller
@@ -49,7 +50,7 @@ class InvoiceController extends Controller
         $validatedData = $request->validated();
 
       $response =  $this->invoiceService->storeInvoice($validatedData);
-      cache()->forget('categories');
+      Redis::del('categories');
         return $response;
 
     }
@@ -81,7 +82,7 @@ class InvoiceController extends Controller
         $validatedData = $request->validated();
 
     $response =  $this->invoiceService->updateInvoice($validatedData,$request->id);
-    cache()->forget('categories');
+    Redis::del('categories');
 
     return $response;
     }

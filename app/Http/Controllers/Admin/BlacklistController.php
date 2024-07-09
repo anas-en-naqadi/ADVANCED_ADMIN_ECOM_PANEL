@@ -32,7 +32,7 @@ class BlacklistController extends Controller
         $user->status = 'blocked';
         $user->save();
         $blacklist = Blacklist::create($validatedData);
-        cache()->forget('blacklists');
+        Redis::del('blacklists');
         return $blacklist ? response()->json(['message' => 'Added to blacklist successfully'],200)
             : response()->json(['message' => 'Oops something went wrong'],402);
     }

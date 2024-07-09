@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Exception;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\URL;
 
 
@@ -98,6 +99,7 @@ class UserController extends Controller
             $user = User::findOrFail($request->user_id);
             $user->status = $request->status;
             $user->save();
+            Redis::del('users');
             return response()->json(['message' => 'User has been ' . ($request->status == 'active' ? 'activated' : 'deactivated') . ' successfully'], 200);
         } catch (Exception $e) {
             return response()->json(['message' => 'oops, something went wrong'], 500);
@@ -113,6 +115,7 @@ class UserController extends Controller
         $user =   User::create($validatedData);
         if ($user)
             Mail::to($validatedData['email'])->send(new SendPasswordMail(['password' => $password, 'name' => $validatedData['name'], 'email' => $validatedData['email'], 'role' => $validatedData['is_admin']]));
+        Redis::del('users');
         return response()->json(['message' => 'User added successfully'], 200);
     }
     public function updatePass(Request $request)
@@ -164,24 +167,30 @@ class UserController extends Controller
         $user = User::find($id);
         $user->is_admin = 1;
         $user->save();
+        Redis::del('users');
         return response()->json(['message' => 'this account now is admin'], 200);
     }
 
     public function users()
     {
-        // Retrieve users who do not have a corresponding entry in the blacklist table
-        $users = User::whereDoesntHave('blacklist')->latest()->get();
-        foreach ($users as $user) {
-            $user->avatar = URL::to($user->avatar);
-        }
-        return response()->json($users);
+        $cacheKey = 'users';
+        $cachedData = getCachedData($cacheKey, function () {
+            // Retrieve users who do not have a corresponding entry in the blacklist table
+            $users = User::whereDoesntHave('blacklist')->latest()->get();
+            foreach ($users as $user) {
+                $user->avatar = URL::to($user->avatar);
+            }
+            return $users;
+        });
+
+        return response()->json($cachedData);
     }
 
 
     public function moveUserToBlackList($id)
     {
         $user = User::whereId($id)->get();
-
+        Redis::del('users');
         return response()->json(['message' => $user->name . ' moved To blacklist !!']);
     }
     public function getLoggedUser()

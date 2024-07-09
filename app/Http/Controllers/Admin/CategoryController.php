@@ -7,6 +7,7 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class CategoryController extends Controller
 {
@@ -28,7 +29,7 @@ class CategoryController extends Controller
         $validatedData = $request->validated();
         CleanInputs($validatedData);
         $category =  Category::create($validatedData);
-        cache()->forget('categories');
+        Redis::del('categories');
 
         return $category ? response()->json('new category added successfully !!',200) : response()->json('oops, something went wrong!!',500);
     }
@@ -38,7 +39,7 @@ class CategoryController extends Controller
         try {
             $category = Category::findOrFail($id);
             $category->delete();
-            cache()->forget('categories');
+            Redis::del('categories');
 
             return response()->json(['message' => 'la categorie a ete supprime avec success']);
         } catch (ModelNotFoundException $message) {

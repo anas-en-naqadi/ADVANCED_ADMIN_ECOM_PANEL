@@ -20,6 +20,7 @@ use App\Http\Controllers\User\WishListController;
 use App\Models\ProductImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,7 +85,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 });
-Route::get('/test',function(){
-    $cachedData = Cache::get("monthly_user_registration");
-    return response()->json($cachedData);
+Route::get('/test-redis', function () {
+  
+
+    // Retrieve a value from Redis
+    $cachedData = Redis::get('monthly_sales');
+
+    return response()->json(['cached_data' => $cachedData]);
 });

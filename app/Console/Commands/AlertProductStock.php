@@ -35,7 +35,7 @@ class AlertProductStock extends Command
                 foreach ($admins as $admin) {
 
                     $admin->notify(new StockAlertNotification(['stock' => $product->quantity, 'product_name' => $product->product_name]));
-                    info('i ma here');
+                    
                 }
             }
         }

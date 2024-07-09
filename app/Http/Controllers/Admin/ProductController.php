@@ -11,6 +11,7 @@ use App\Notifications\StockAlertNotification;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\URL;
 
 class ProductController extends Controller
@@ -46,7 +47,7 @@ class ProductController extends Controller
         }
         // $validatedData['user_id'] = getSimpleUser()->id;
         Product::create($validatedData);
-        cache()->forget('key');
+        Redis::del('key');
         return response()->json(['message' => 'Product added successfully']);
     }
 
@@ -68,7 +69,7 @@ class ProductController extends Controller
 
         // Update the product
         $product->update($validatedData);
-        cache()->forget('key');
+        Redis::del('key');
         return response()->json(['message' => 'product item updated successfully']);
     }
 
@@ -92,6 +93,7 @@ class ProductController extends Controller
             if ($product->image) {
                 File::delete(public_path($product->image));
             }
+            Redis::del('key');
             return response()->json(['message' => 'product deleted successfully']);
         } catch (ModelNotFoundException $exception) {
             return response()->json(['message' => 'product not found'], 404);

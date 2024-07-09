@@ -22,11 +22,11 @@ class DashboardController extends Controller
         'rgba(54, 162, 235, 0.2)',    // May
         'rgba(153, 102, 255, 0.2)',   // June
         'rgba(201, 203, 207, 0.2)',   // July
-        'rgba(255, 99, 132, 0.2)',    // August
-        'rgba(255, 159, 64, 0.2)',    // September
-        'rgba(255, 205, 86, 0.2)',    // October
-        'rgba(75, 192, 192, 0.2)',    // November
-        'rgba(54, 162, 235, 0.2)',    // December
+      'rgba(153, 102, 255, 0.2)',   // June
+    'rgba(201, 203, 207, 0.2)',   // July
+    'rgba(106, 90, 205, 0.2)',    // August (New color)
+    'rgba(255, 165, 0, 0.2)',     // September (New color)
+    'rgba(30, 144, 255, 0.2)',
     ];
 
     private const borderColors = [
@@ -37,11 +37,11 @@ class DashboardController extends Controller
         'rgb(54, 162, 235)',    // May
         'rgb(153, 102, 255)',   // June
         'rgb(201, 203, 207)',   // July
-        'rgb(255, 99, 132)',    // August
-        'rgb(255, 159, 64)',    // September
-        'rgb(255, 205, 86)',    // October
-        'rgb(75, 192, 192)',    // November
-        'rgb(54, 162, 235)',    // December
+      'rgba(153, 102, 255, 0.2)',   // June
+    'rgba(201, 203, 207, 0.2)',   // July
+    'rgba(106, 90, 205, 0.2)',    // August (New color)
+    'rgba(255, 165, 0, 0.2)',     // September (New color)
+    'rgba(30, 144, 255, 0.2)',
     ];
 
 
@@ -105,33 +105,37 @@ class DashboardController extends Controller
     }
 
     public function getMonthlySales()
-    {
-        $cacheKey = 'monthly_sales';
-        $cacheData = getCachedData($cacheKey, function () {
-            // Get the first and last day of the current month
-            $firstDayOfMonth = Carbon::now()->startOfMonth()->toDateString();
-            $lastDayOfMonth = Carbon::now()->endOfMonth()->toDateString();
+{
+    $cacheKey = 'monthly_sales';
+    $cacheData = getCachedData($cacheKey, function () {
+        // Get the first and last day of the current month
+        $firstDayOfMonth = Carbon::now()->startOfMonth()->toDateString();
+        $lastDayOfMonth = Carbon::now()->endOfMonth()->toDateString();
 
-            // Example query to retrieve sales data for the current month
-            $monthlySales = Sell::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
-                ->orderBy('created_at')
-                ->get(['created_at', 'total_amount']); // Adjust fields as per your database structure
+        // Query to retrieve daily sales data for the current month
+        $dailySales = Sell::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
+            ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total_sales')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
 
-            // Prepare the response data
-            $labels = $monthlySales->map(function ($sale) {
-                return Carbon::parse($sale->created_at)->format('d/M'); // Format 'created_at' to get day/month
-            })->toArray();
-            $data = $monthlySales->pluck('total_amount')->toArray(); // Assuming 'amount' is the field for sales values
+        // Prepare the response data
+        $labels = $dailySales->map(function ($sale) {
+            return Carbon::parse($sale->date)->format('d/M'); // Format 'date' to get day/month
+        })->toArray();
+        $data = $dailySales->pluck('total_sales')->toArray(); // Sales amount for each day
 
-            return [
-                'labels' => $labels,
-                'data' => $data,
-                'colors' => Self::colors,
-                'borderColors' => Self::borderColors
-            ];
-        });
-        return response()->json($cacheData);
-    }
+        return [
+            'labels' => $labels,
+            'data' => $data,
+            'colors' => Self::colors,         // Assuming Self::colors is defined somewhere with your color array
+            'borderColors' => Self::borderColors // Assuming Self::borderColors is defined somewhere with your border color array
+        ];
+    });
+
+    return response()->json($cacheData);
+}
+
     public function orderStatusPieChart()
     {
         $cacheKey = 'order_status';
@@ -140,31 +144,36 @@ class DashboardController extends Controller
         $returnedCount = Order::where('status', 'returned')->count();
         $confirmedCount = Order::where('status', 'confirmed')->count();
         $canceledCount = Order::where('status', 'canceled')->count();
+        $processedCount = Order::where('status', 'pending')->count();
 
 
         // Calculate total number of orders
-        $totalCount = $returnedCount + $confirmedCount + $canceledCount;
+        $totalCount = $returnedCount + $confirmedCount + $canceledCount + $processedCount;
 
         if ($totalCount > 0) {
             // Calculate percentage for each status
             $returnedPercentage = $returnedCount / $totalCount * 100;
             $confirmedPercentage = $confirmedCount / $totalCount * 100;
             $canceledPercentage = $canceledCount / $totalCount * 100;
+            $processedPercentage = $processedCount / $totalCount * 100;
+
         } else {
             // Set percentages to 0 if there are no orders
             $returnedPercentage = 0.1;
             $confirmedPercentage = 0.1;
             $canceledPercentage = 0.1;
+            $processedPercentage = 0.1;
         }
 
         // Prepare data for the pie chart
-        $labels = ['Returned', 'Confirmed', 'Canceled'];
-        $data = [$returnedPercentage, $confirmedPercentage, $canceledPercentage];
+        $labels = ['Returned', 'Confirmed', 'Canceled','Pending'];
+        $data = [$returnedPercentage, $confirmedPercentage, $canceledPercentage,$processedPercentage];
 
         $colorsStatus = [
             'rgba(255, 99, 132, 0.4)',
             'rgba(75, 192, 192, 0.8)',
             'rgba(54, 162, 235, 0.8)',
+                     'rgba(50, 205, 50, 0.2)'
         ]; // Red, Green, Blue
 
         // Return the data
@@ -179,7 +188,7 @@ class DashboardController extends Controller
         $todayMoney = Order::whereDate('created_at', today())->sum('amount');
         $todaysUsers = User::whereDate('created_at', today())->count();
         $newClients = Order::whereDate('created_at', today())->distinct()->count('user_id');
-        $todaysSalesAmount = Sell::whereDate('created_at', today())->sum('total_amount');
+        $todaysSalesAmount =  Sell::whereBetween('created_at', [today()->startOfMonth(), today()->endOfMonth()])->sum('total_amount');
         $thisWeekSalesAmount = Sell::whereBetween('created_at', [today()->startOfWeek(), today()->endOfWeek()])->sum('total_amount');
         // Retrieve data from the previous period (e.g., yesterday)
         $yesterdayMoney = Order::whereDate('created_at', today()->subDay())->sum('amount');

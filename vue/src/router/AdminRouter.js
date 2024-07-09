@@ -40,7 +40,7 @@ export default [
                 component: () => import("@/views/admin/order/Orders.vue"),
             },
             {
-                path: "/admin/orders/:id",
+                path: "/admin/orders/:id(\\d+)",
                 name: "order-details",
                 component: () => import("@/views/admin/order/OrderDetails.vue"),
             },
@@ -65,9 +65,9 @@ export default [
                 },
                 component: () => import("@/views/admin/Profile.vue"),
             },
-          
+
             {
-                path: "/admin/invoice/show/:id",
+                path: "/admin/invoice/show/:id(\\d+)",
                 name: "invoice-details",
                 component: () =>
                     import("@/views/admin/invoice/InvoiceDetails.vue"),
@@ -79,7 +79,7 @@ export default [
                     import("@/views/admin/invoice/ActionInvoice.vue"),
             },
             {
-                path: "/admin/invoice/:id/edit",
+                path: "/admin/invoice/:id(\\d+)/edit",
                 name: "edit-invoice",
                 component: () =>
                     import("@/views/admin/invoice/ActionInvoice.vue"),

@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use App\Models\Sell;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Redis;
 
 class InvoiceService
 {
@@ -44,7 +45,7 @@ class InvoiceService
             // Update total amount for the invoice
             $invoice->total = $totalInvoiceAmount;
             $invoice->save();
-
+            Redis::del('invoices');
             DB::commit();
             return response()->json(['id'=>$invoice->id,'message' => 'New invoice added successfully'], 200);
         } catch (\Exception $e) {
@@ -89,6 +90,7 @@ class InvoiceService
             // Update total amount for the invoice
             $invoice->total = $totalInvoiceAmount;
             $invoice->save();
+            Redis::del('invoices');
 
             DB::commit();
             return response()->json(['message' => 'Invoice updated successfully'], 200);
