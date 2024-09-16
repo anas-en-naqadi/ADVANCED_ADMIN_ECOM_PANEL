@@ -262,7 +262,7 @@
                             class="text-lg text-left md:text-xl white:text-white font-semibold leading-6 xl:leading-5 text-gray-800">
                             Status de commande
                         </p>
-                        <div class="">
+                        <div class="w-min">
                             <Skeleton width="40rem" class="mx-18 -mb-10" height="16rem"></Skeleton>
                         </div>
                     </div>
@@ -479,7 +479,7 @@ function changeStatus() {
     status.value = null;
     store
         .dispatch("setOrderStatus", {
-            status: status.value?.toLowerCase() || null,
+            status: status.value?.toLowerCase(),
             id: route.params.id,
         })
         .then((res) => {

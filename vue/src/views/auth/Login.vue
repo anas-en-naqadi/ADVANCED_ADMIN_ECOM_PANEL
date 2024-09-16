@@ -112,7 +112,7 @@
             :loading="loading"
             @trigger-event="login()"
             :string="'Sign in'"
-            :color="'emerald'"
+            :color="'green'"
           />
         </div>
       </form>

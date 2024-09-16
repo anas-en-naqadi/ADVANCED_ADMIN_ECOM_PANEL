@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import AdminRouter from "./AdminRouter";
 import store from "../store";
+import UserRouter from "./UserRouter";
 const routes = [
     ...AdminRouter,
+    ...UserRouter,
     {
         path: "/login",
         name: "login",

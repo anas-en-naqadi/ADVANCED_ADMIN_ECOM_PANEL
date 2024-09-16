@@ -1,9 +1,9 @@
 <template>
-    
 
 
 
-   
+
+
 
     <!-- breadcrumb -->
     <div class="container py-4 flex items-center gap-3">
@@ -20,14 +20,14 @@
     <!-- product-detail -->
     <div class="container grid grid-cols-2 gap-6">
         <div>
-            <img src="../assets/images/products/product1.jpg" alt="product" class="w-full">
+            <img src="@/assets/images/products/product1.jpg" alt="product" class="w-full">
             <div class="grid grid-cols-5 gap-4 mt-4">
-                <img src="../assets/images/products/product2.jpg" alt="product2"
+                <img src="@/assets/images/products/product2.jpg" alt="product2"
                     class="w-full cursor-pointer border border-primary">
-                <img src="../assets/images/products/product3.jpg" alt="product2" class="w-full cursor-pointer border">
-                <img src="../assets/images/products/product4.jpg" alt="product2" class="w-full cursor-pointer border">
-                <img src="../assets/images/products/product5.jpg" alt="product2" class="w-full cursor-pointer border">
-                <img src="../assets/images/products/product6.jpg" alt="product2" class="w-full cursor-pointer border">
+                <img src="@/assets/images/products/product3.jpg" alt="product2" class="w-full cursor-pointer border">
+                <img src="@/assets/images/products/product4.jpg" alt="product2" class="w-full cursor-pointer border">
+                <img src="@/assets/images/products/product5.jpg" alt="product2" class="w-full cursor-pointer border">
+                <img src="@/assets/images/products/product6.jpg" alt="product2" class="w-full cursor-pointer border">
             </div>
         </div>
 
@@ -204,8 +204,8 @@
         <div class="grid grid-cols-4 gap-6">
             <div class="bg-white shadow rounded overflow-hidden group">
                 <div class="relative">
-                    <img src="../assets/images/products/product1.jpg" alt="product 1" class="w-full">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center 
+                    <img src="@/assets/images/products/product1.jpg" alt="product 1" class="w-full">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center
                     justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
                         <a href="#"
                             class="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
@@ -245,8 +245,8 @@
             </div>
             <div class="bg-white shadow rounded overflow-hidden group">
                 <div class="relative">
-                    <img src="../assets/images/products/product4.jpg" alt="product 1" class="w-full">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center 
+                    <img src="@/assets/images/products/product4.jpg" alt="product 1" class="w-full">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center
                     justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
                         <a href="#"
                             class="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
@@ -286,8 +286,8 @@
             </div>
             <div class="bg-white shadow rounded overflow-hidden group">
                 <div class="relative">
-                    <img src="../assets/images/products/product2.jpg" alt="product 1" class="w-full">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center 
+                    <img src="@/assets/images/products/product2.jpg" alt="product 1" class="w-full">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center
                     justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
                         <a href="#"
                             class="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
@@ -327,8 +327,8 @@
             </div>
             <div class="bg-white shadow rounded overflow-hidden group">
                 <div class="relative">
-                    <img src="../assets/images/products/product3.jpg" alt="product 1" class="w-full">
-                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center 
+                    <img src="@/assets/images/products/product3.jpg" alt="product 1" class="w-full">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center
                     justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
                         <a href="#"
                             class="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
@@ -370,6 +370,6 @@
     </div>
     <!-- ./related product -->
 
-   
+
 
 </template>

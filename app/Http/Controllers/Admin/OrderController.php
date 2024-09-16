@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Notifications\NewOrderNotification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Redis;
 
 class OrderController extends Controller
 {
@@ -146,13 +147,13 @@ class OrderController extends Controller
     public function changeOrderStatus(Request $request)
     {
 
-        $status = $request->validate(['status'=>'required|string']);
+        $validatedData = $request->validate(['status'=>'required|string']);
 
 
         $order = Order::findOrFail($request->id);
-
+        Redis::del('orders');
         if ($order) {
-            $order->status = $status;
+            $order->status = $validatedData['status'];
             $order->save();
             return response()->json(['message' => 'Status a ete change avec success'], 200);
         } else {

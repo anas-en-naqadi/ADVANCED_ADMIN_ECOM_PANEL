@@ -180,7 +180,7 @@
                 </div>
                 <div class="card w-full xl:w-[48%] p-6 bg-white border border-gray-300 rounded-xl pb-0">
                     <div class="flex items-center">
-                        <p class="mb-0 white:text-white/80 font-bold">Edit Shipping Details</p>
+                        <p class="mb-0 white:text-white/80 font-bold">Edit Address Details</p>
                         <button @click="ShippingAction" type="button"
                             class="inline-block px-8 py-2 mt-3 mb-4 ml-auto font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                             save
