@@ -65,7 +65,7 @@ export default [
             },
             {
                 path: "/admin/profile",
-                name: "profile",
+                name: "admin-profile",
                 meta:{
                     title:"Profile - Admin"
                 },

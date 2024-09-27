@@ -295,9 +295,7 @@ function fetchInvoiceById() {
                 invoice.value = res.data;
                 console.dir(invoice.value);
             }
-            if (res.response && res.response.status === 404) {
-            router.push({ name: 'notFound' });
-          }
+            
         })
         .catch((error) => console.error(error))
         .finally(() => {

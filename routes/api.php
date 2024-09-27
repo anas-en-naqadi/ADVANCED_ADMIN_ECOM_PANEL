@@ -54,7 +54,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/order-status', [OrderController::class, 'changeOrderStatus']);
     Route::resource('product', ProductController::class);
     Route::resource('order', OrderController::class);
-    Route::resource('more-images', ProductImagesController::class);
+    Route::resource('more-images',ProductImagesController::class);
     Route::resource('category', CategoryController::class);
     Route::resource('invoice', InvoiceController::class);
     Route::resource('shipping', ShippingController::class);
@@ -80,16 +80,10 @@ Route::resource('wish-list', WishListController::class);
 
 // Route::resource('review', ReviewController::class);
 
-
+Route::get("/test",function(){
+    return response("",500);
+});
 Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-});
-Route::get('/test-redis', function () {
-  
-
-    // Retrieve a value from Redis
-    $cachedData = Redis::get('monthly_sales');
-
-    return response()->json(['cached_data' => $cachedData]);
 });

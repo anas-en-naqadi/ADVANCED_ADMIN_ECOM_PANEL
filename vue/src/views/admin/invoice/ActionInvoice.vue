@@ -252,9 +252,7 @@ function getInvoice() {
       });
 
     }
-    if (res.response && res.response.status === 404) {
-            router.push({ name: 'notFound' });
-          }
+  
   });
 }
 

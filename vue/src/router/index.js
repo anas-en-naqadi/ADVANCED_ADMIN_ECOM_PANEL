@@ -8,42 +8,54 @@ const routes = [
     {
         path: "/login",
         name: "login",
-        meta:{
-            title:"Login - ALMOBARKA"
+        meta: {
+            title: "Login - ALMOBARKA",
         },
         component: () => import("@/views/auth/Login.vue"),
     },
     {
         path: "/register",
         name: "register",
-        meta:{
-            title:"Register - ALMOBARKA"
+        meta: {
+            title: "Register - ALMOBARKA",
         },
         component: () => import("@/views/auth/Register.vue"),
     },
     {
-        path: "/admin",
-        name: "home",
-        component: () => import("@/views/admin/Dashboard.vue"),
+        path: "/:pathMatch(.*)",
+        component: () => import("@/components/NotFound.vue"),
+        meta: {
+            requiresAuth: false,
+            title: "404 Not Found",
+        },
     },
     {
-        path: "/:pathMatch(.*)",
-        component:  () => import("@/components/NotFound.vue"),
+        path: "/emailVerification",
+        name:"emailVerification",
+        component: () => import("@/views/auth/EmailVerification.vue"),
         meta: {
-          requiresAuth: false,
-          title: "Page Not Found",
+            requiresAuth: false,
+            title: "Email Verification",
         },
-      },
-      {
-        path: "/NOT-FOUND",
-        component:  () => import("@/components/NotFound.vue"),
+    },
+    {
+        path: "/notFound",
+        component: () => import("@/components/NotFound.vue"),
         name: "notFound",
         meta: {
-          requiresAuth: false,
-          title: "Page Not Found",
+            requiresAuth: false,
+            title: "404 Not Found",
         },
-      },
-
+    },
+    {
+        path: "/serverError",
+        component: () => import("@/components/ServerError.vue"),
+        name: "serverError",
+        meta: {
+            requiresAuth: false,
+            title: "500 Server Error",
+        },
+    },
 ];
 const router = createRouter({
     history: createWebHistory(),

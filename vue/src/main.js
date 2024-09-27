@@ -18,7 +18,10 @@ import Toast from "primevue/toast";
 import Column from "primevue/column";
 import DataTable from "primevue/datatable";
 import Dialog from "primevue/dialog";
+import { setupAxiosInterceptors } from "../axios"; // Adjust path
 
+// Set up Axios interceptors
+setupAxiosInterceptors(router);
 createApp(App)
     .use(VueSweetalert2)
     .use(PrimeVue)

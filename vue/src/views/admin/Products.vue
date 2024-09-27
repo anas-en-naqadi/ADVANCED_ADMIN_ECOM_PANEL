@@ -63,8 +63,7 @@
                     <template #body="{ data }">
                         <div class="flex gap-3">
                             <button title="Add more images to this product" @click="
-                                visible2 = true;
-                            productId = data.id;
+                                getAllImages(data.id);
                             ">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-purple-500">
@@ -165,6 +164,12 @@
                         :color="'green'" />
                     <Buton class="" :loading="loading" @click="images = []" :string="'Reset'" :color="'red'" />
                 </div>
+                <div v-if="images.length && images[0].id" class="flex items-center justify-center gap-5 w-full -mt-2.5">
+                    <input v-model="imageId" type="text" placeholder="type the order of the image to delete"
+                        class="focus:shadow-primary-outline white:bg-slate-850 white:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                    <Buton class="-mt-[3px]" :loading="loading" @trigger-event="deleteImage()" :string="'Delete Image'"
+                        :color="'red'" />
+                </div>
                 <div class="flex items-center justify-center w-full">
                     <label for="dropzone-file"
                         class="flex flex-col items-center justify-center w-[20rem] h-54  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 white:hover:bg-bray-800 white:bg-gray-700 hover:bg-gray-100 white:border-gray-600 white:hover:border-gray-500 white:hover:bg-gray-600">
@@ -186,7 +191,6 @@
                         <input id="dropzone-file" type="file" class="hidden" @change="addMoreImages" multiple />
                     </label>
                 </div>
-
                 <Galleria :value="images" :responsiveOptions="responsiveOptions" :numVisible="5" class="mb-10"
                     containerStyle="max-width: 650px;max-height:300px">
                     <template #item="slotProps">
@@ -276,7 +280,7 @@
 
                     <select v-model="product.category" id="underline_select"
                         class="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none white:text-gray-400 white:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-                        <option selected>Choose a country</option>
+                        <option value="" selected>Choose a country</option>
                         <option v-for="category in categories" :key="category.id">
                             {{ category.category_name }}
                         </option>
@@ -305,7 +309,7 @@ const toast = useToast();
 const categories = ref([]);
 const products = computed(() => store.state.products);
 const filteredProducts = computed(() => store.state.products);
-
+let imageId = 0;
 const images = ref([]);
 const product = ref({
     product_name: "",
@@ -429,19 +433,20 @@ function addProduct() {
 
 let productId;
 function addImages() {
+    images.value = images.value.filter((i) => i.id === undefined);
     store
         .dispatch("storeMultipleImages", { images: images.value, product_id: productId })
         .then((res) => {
-            if (res) {
-                common.showToast({ title: res.message, icon: "success" });
+            if (res.status === 200 ) {
+                common.showToast({ title: res.data.message, icon: "success" });
             }
         })
         .catch((error) => {
-            common.showToast({ title: error, icon: "error" });
+            common.showToast({ title: error.data.message, icon: "error" });
         })
         .finally(() => {
-            visible1.value = false;
-            fetchProducts();
+            visible2.value = false;
+            images.value = [];
             product.value = {};
         });
 }
@@ -468,7 +473,6 @@ function onChooseImage(event) {
 }
 
 function addMoreImages(event) {
-    images.value = [];
 
     if (event.target.files.length <= 5) {
         const files = event.target.files;
@@ -542,4 +546,50 @@ function filterTable(event) {
 
 // Define skeleton data
 const skeletonObjects = new Array(10);
+function getAllImages(id) {
+    productId = id;
+    store.dispatch("fetchAllImages", id).then((res) => {
+        if (res.status === 200 && res.data) {
+            images.value.length = 0; // Clear the existing images if needed
+            res.data.forEach((i) => {
+                images.value.push({
+                    id:i.id,
+                    src: i.image_path, // Adjust path based on where your images are stored
+                    alt: "test" // Example alt text, you can set this dynamically if needed
+                });
+            });
+        }
+    }).catch((error) => {
+        console.error("Error fetching images:", error);
+    }).finally(() => {
+        visible2.value = true; // Ensure this is executed after fetching is done
+    });
+}
+function deleteImage() {
+    if (imageId != 0) {
+        const id = images.value[imageId - 1]?.id;
+         images.value = images.value.filter((image, index) => index !== (imageId - 1));
+        imageId= 0;
+        if(id){
+            store.dispatch("destroyImage", { image_id: id }).then((res) => {
+                console.log("res", res)
+                if (res.status === 200 && res) {
+                    common.showToast({ title: res.data.message, icon: "success" });
+                    imageId = 0;
+                }
+            }).catch((error) => {
+                common.showToast({ title: "Oops, something went wrong !!", icon: "warning" });
+
+            })
+        }else{
+            common.showToast({ title: "Image deleted successfully !!", icon: "success" });
+
+        }
+
+
+    } else {
+        common.showToast({ title: "Please type the order of the image", icon: "warning" });
+
+    }
+}
 </script>
