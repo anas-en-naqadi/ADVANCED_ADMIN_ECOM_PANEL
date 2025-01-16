@@ -28,5 +28,8 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
-
+    public function getImageUrlAttribute()
+    {
+        return url($this->image); // Adjust as necessary
+    }
 }

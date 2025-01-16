@@ -5,7 +5,7 @@
                 List of Sells
             </h2>
             <p class="mb-4 text-2xl font-extrabold p-8">
-                Total d'achats:
+                Total Sells:
                 <span class="text-2xl font-bold text-blue-800">{{ common.formatNumber(total) }} DH</span>
             </p>
         </div>

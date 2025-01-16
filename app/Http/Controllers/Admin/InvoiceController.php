@@ -29,7 +29,7 @@ class InvoiceController extends Controller
         $cacheKey = 'invoices';
         $cacheData = getCachedData($cacheKey, function () {
         // Retrieve invoices with sells and customer relationship
-        $invoices = Invoice::get()
+        $invoices = Invoice::latest()->get()
             ->map(function ($invoice) {
                 // Add additional attributes to the invoice object
                 $invoice->sell_count = $invoice->sells->count();
@@ -39,6 +39,7 @@ class InvoiceController extends Controller
 
         return $invoices;
         });
+        clearDashboard();
         return response()->json($cacheData);
 
     }

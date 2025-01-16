@@ -95,7 +95,7 @@
             </div>
         </div>
         <a href="#"
-            class="flex items-center space-x-2 bg-red-600 xl:-mt-[9rem] md:-mt-[19rem] -mt-[15rem] hover:bg-red-700 text-gray-100 px-4 py-2 rounded transition duration-150"
+            class="flex items-center space-x-2 bg-red-600  xl:-mt-[9rem] md:-mt-[19rem] mt-[5rem] hover:bg-red-700 text-gray-100 px-4 py-2 rounded transition duration-150"
             title="Return Home">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"

@@ -148,10 +148,10 @@
                 </div>
             </div>
             <div class="flex-shrink max-w-full px-4 w-full mb-6" id="invoice" v-else>
-                <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                <div class="p-6 bg-white white:bg-gray-800 rounded-lg shadow-lg">
                     <!-- Company info and title section -->
                     <div
-                        class="flex flex-col md:flex-row justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700 mb-3">
+                        class="flex flex-col md:flex-row justify-between items-center pb-4 border-b border-gray-200 white:border-gray-700 mb-3">
                         <div class="flex items-center mb-3 md:mb-0">
                             <img class="w-24 h-24 md:w-[10rem] md:h-[8rem] mr-2 ml-2" src="@/assets/images/olive.png"
                                 alt="Company Logo" />
@@ -196,9 +196,9 @@
 
                     <!-- Product list table -->
                     <div class="py-4 overflow-x-auto">
-                        <table class="table-bordered w-full text-gray-600 dark:text-gray-400">
-                            <thead class="border-b dark:border-gray-700">
-                                <tr class="bg-green-800 h-9 text-center text-white dark:bg-gray-900 dark:bg-opacity-20">
+                        <table class="table-bordered w-full text-gray-600 white:text-gray-400">
+                            <thead class="border-b white:border-gray-700">
+                                <tr class="bg-green-800 h-9 text-center text-white white:bg-gray-900 white:bg-opacity-20">
                                     <th>Products</th>
                                     <th class="text-center">Qty</th>
                                     <th class="text-center">Unit price</th>

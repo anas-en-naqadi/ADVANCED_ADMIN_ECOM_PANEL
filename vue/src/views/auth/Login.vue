@@ -1,14 +1,14 @@
 
 <template>
     <div id="container"
-        class="flex mt-[2rem] mb-[4rem] shadow-md  bg-white border border-gray-200 xl:w-[27%] lg:w-[40%] md:w-[40%] sm:w-[50%] w-[50%] mx-auto rounded-md flex-col justify-center px-6 py-12 lg:px-8">
+        class="flex mt-[5.1rem] mb-[4rem] shadow-md  bg-white border border-gray-200 xl:w-[27%] lg:w-[40%] md:w-[40%] sm:w-[50%] w-[50%] mx-auto rounded-md flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm sm:max-h-sm -mt-12">
             <img class="mx-auto h-32 w-32 -mb-10" src="@/assets/images/olive.png" alt="Your Company" />
             <h2 class="mt-5 text-center text-xl font-bold leading-9 tracking-tight text-green-900">
                 Sign in to your account
             </h2>
         </div>
-        <div class="mt-7 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div class="mt-7 mb-11 sm:mx-auto sm:w-full sm:max-w-sm">
             <form class="space-y-6">
                 <div v-if="errorMsg.length || message"
                     class="flex p-4  mb-4 text-sm text-red-800 rounded-lg bg-red-50 "
@@ -61,7 +61,7 @@
                         </label>
                     </div>
                     <div class="text-sm">
-                        <router-link :to="{ name:'emailVerification'}"
+                        <router-link to="#"
                             class="font-semibold text-green-600 hover:text-green-500 hover:underline">Forgot Password?
                             </router-link>
                     </div>
@@ -72,11 +72,11 @@
                 </div>
             </form>
 
-           
+
         </div>
     </div>
 </template>
-<style scoped>
+<style scope>
 @media only screen and (max-width: 550px) {
 
     #container {

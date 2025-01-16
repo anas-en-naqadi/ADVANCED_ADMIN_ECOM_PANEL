@@ -6,7 +6,7 @@
       </h2>
       <Button
         @click="visible=true"
-        label="+ nouveau category"
+        label="+ new Category"
         class="p-button-outlined h-10 bg-white py-2 px-3 mr-6 border border-black rounded-md text-black hover:text-white hover:bg-black"
       />
     </div>
@@ -73,9 +73,9 @@
         <Column header="Actions"           class="border-b-[1px] text-center">
           <template #body="{ data }">
             <div class="flex gap-3">
-              <button
+              <!-- <button
                 title="Ajouter nouveau categorie"
-                @click="showDialog(null)"
+                @click="showDialog(data.id)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,7 @@
                     d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                   />
                 </svg>
-              </button>
+              </button> -->
 
               <button
                 title="Delete this product"
@@ -249,15 +249,15 @@ function filterTable(event) {
       c.category_name.toLowerCase().includes(filter)
     );
 }
-function showDialog(id) {
-  visible.value = true;
-  if (id) {
-    category.value.id = id;
-    document.getElementById("action-button").textContent = "Modifier";
-  } else {
-    document.getElementById("action-button").textContent = "Ajouter";
-  }
-}
+// function showDialog(id) {
+//   visible.value = true;
+//   if (id) {
+//     category.value.id = id;
+//     document.getElementById("action-button").textContent = "Modifier";
+//   } else {
+//     document.getElementById("action-button").textContent = "Ajouter";
+//   }
+// }
 function addCategory() {
   store
     .dispatch("storeCategory", category_name)

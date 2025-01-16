@@ -17,7 +17,7 @@ class ShippingFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'=> \App\Models\User::inRandomOrder()->first()->unique()->id,
+            'user_id'=> \App\Models\User::inRandomOrder()->first()->id,
             'address'=> $this->faker->streetAddress,
             'city' => $this->faker->city,
             'state' => $this->faker->streetName,

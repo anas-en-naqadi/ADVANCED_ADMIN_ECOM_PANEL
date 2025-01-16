@@ -11,7 +11,7 @@ const routes = [
         },
         component: () => import("@/views/auth/Login.vue"),
     },
-   
+
     {
         path: "/:pathMatch(.*)",
         component: () => import("@/components/NotFound.vue"),
@@ -20,15 +20,7 @@ const routes = [
             title: "404 Not Found",
         },
     },
-    {
-        path: "/emailVerification",
-        name:"emailVerification",
-        component: () => import("@/views/auth/EmailVerification.vue"),
-        meta: {
-            requiresAuth: false,
-            title: "Email Verification",
-        },
-    },
+
     {
         path: "/notFound",
         component: () => import("@/components/NotFound.vue"),
@@ -53,19 +45,24 @@ const router = createRouter({
     routes,
 });
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title}`;
-    if (to.meta.requiresAuth && !sessionStorage.getItem("TOKEN")) {
-        next({ name: "login" });
-    } else if (!sessionStorage.getItem("TOKEN") && to.meta.isGuest) {
-        next({ name: "login" });
-    } else if (sessionStorage.getItem("TOKEN") && to.name === "login") {
-        if(store.state.user.is_admin)
-        next({ name: "dashboard" });
-    else
-    next({name:"home"});
-    } else {
-        next();
+    const token = sessionStorage.getItem("TOKEN");
+    const isAdmin = store.state.user.is_admin;
+
+    document.title = to.meta.title;
+
+    if (to.meta.requiresAuth && !token) {
+        return next({ name: "login" });
     }
+
+    if (to.meta.isGuest && token) {
+        return next({ name: "dashboard" });
+    }
+
+    if (token && to.name === "login" && isAdmin) {
+        return next({ name: "dashboard" });
+    }
+
+    next();
 });
 
 export default router;

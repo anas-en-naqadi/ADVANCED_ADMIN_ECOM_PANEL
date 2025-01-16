@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Support\Str;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -29,6 +28,15 @@ function getSimpleUser()
     Redis::set($cacheKey, json_encode($data));
     Redis::expire($cacheKey, 60 * 60);
     return $data;
+}
+function clearDashboard(){
+    Redis::del('monthly_user_registration');
+    Redis::del('stock_by_category');
+    Redis::del('monthly_sales');
+    Redis::del('order_status');
+    Redis::del('dashboard_data');
+    Redis::del('weekly_sales');
+    Redis::del('monthly_sales_Chart');
 }
 function storeImage($image)
 {

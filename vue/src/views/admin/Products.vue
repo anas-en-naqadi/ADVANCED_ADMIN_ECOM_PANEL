@@ -4,7 +4,7 @@
             <h2 class="mb-3 text-2xl font-extrabold tracking-tight text-gray-900 p-8">
                 List of products
             </h2>
-            <Button @click="visible1 = true" label="+ nouveau produit"
+            <Button :disabled="loading" @click="visible1 = true" label="+ new Product"
                 class="p-button-outlined h-10 bg-white py-2 px-3 mr-6 border border-black rounded-md text-black hover:text-white hover:bg-black" />
         </div>
         <!-- Main Data Table -->
@@ -34,7 +34,7 @@
                 <Column field="product_name" header="Nom produit" class="border-b-[1px] text-center"></Column>
                 <Column field="image" header="Image" class="border-b-[1px] text-center" style="min-width: 12rem">
                     <template #body="{ data }">
-                        <img v-if="data.image" class="w-36 h-24 rounded-sm" :src="data.image" alt="Product Image" />
+                        <img v-if="data.image" class="w-36 h-24 rounded-sm" loading="lazy" :src="data.image" alt="Product Image" />
                         <span v-else>No Image for this product</span>
                     </template>
                 </Column>
@@ -167,7 +167,7 @@
                 <div v-if="images.length && images[0].id" class="flex items-center justify-center gap-5 w-full -mt-2.5">
                     <input v-model="imageId" type="text" placeholder="type the order of the image to delete"
                         class="focus:shadow-primary-outline white:bg-slate-850 white:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                    <Buton class="-mt-[3px]" :loading="loading" @trigger-event="deleteImage()" :string="'Delete Image'"
+                    <Buton class="-mt-[4px]" :loading="loading" @trigger-event="deleteImage()" :string="'Delete Image'"
                         :color="'red'" />
                 </div>
                 <div class="flex items-center justify-center w-full">
@@ -204,7 +204,7 @@
             </div>
         </Dialog>
 
-        <Dialog v-model:visible="visible1" modal header="Modifier Produit"
+        <Dialog v-model:visible="visible1" modal :header="(product.id ? 'Modify' : 'Add') + ' Product'"
             class="w-[50%] xl:w-[35%] md:w-[50%] sm:w-[50%]">
             <form class="max-w-md mx-auto mt-4 w-full">
                 <div class="relative z-0 w-full mb-5 group">
@@ -299,7 +299,7 @@
 <script setup>
 
 import { useToast } from "primevue/usetoast";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed,watch } from "vue";
 import store from "../../store";
 import common from "../../utils/common";
 import Buton from "../../components/Button.vue";
@@ -308,7 +308,7 @@ const visible2 = ref(false);
 const toast = useToast();
 const categories = ref([]);
 const products = computed(() => store.state.products);
-const filteredProducts = computed(() => store.state.products);
+const filteredProducts = ref([])
 let imageId = 0;
 const images = ref([]);
 const product = ref({
@@ -326,6 +326,10 @@ onMounted(() => {
     fetchProducts();
     fetchCategories();
 });
+watch(visible1,(newVal)=>{
+    if(!newVal)
+        product.value = {};
+})
 function fetchCategories() {
     store
         .dispatch("getCategories")
@@ -401,7 +405,7 @@ function addProduct() {
     )?.id;
     delete product.value.category;
 
-    ;
+    
     store
         .dispatch("storeProduct", product.value)
         .then((res) => {
@@ -474,7 +478,7 @@ function onChooseImage(event) {
 
 function addMoreImages(event) {
 
-    if (event.target.files.length <= 5) {
+    if (event.target.files.length <= 5 && event.target.files.length >=1) {
         const files = event.target.files;
         const reader = new FileReader();
 
@@ -491,7 +495,8 @@ function addMoreImages(event) {
 
         // Start reading the first file
         reader.readAsDataURL(files[0]);
-    } else {
+    } 
+    else {
         common.showToast({
             title: "Please select a maximum of 5 images",
             icon: "error",
@@ -502,7 +507,9 @@ function addMoreImages(event) {
 function fetchProducts() {
     store
         .dispatch("getProducts")
-        .then()
+        .then((res)=>{
+            filteredProducts.value = [...res];
+        })
         .catch((error) => console.error(error))
         .finally(() => {
             loading.value = false;
@@ -535,13 +542,17 @@ function deleteProduct(id) {
 function filterTable(event) {
     const filter = event.target.value.toLowerCase();
 
-    if (!filter) filteredProducts.value = products.value;
-    else
+    // If there's no filter, reset filteredProducts to the full list
+    if (!filter) {
+        filteredProducts.value = products.value;
+    } else {
+        // Filter products based on the search input
         filteredProducts.value = products.value.filter(
             (p) =>
                 p.description.toLowerCase().includes(filter) ||
                 p.product_name.toLowerCase().includes(filter)
         );
+    }
 }
 
 // Define skeleton data

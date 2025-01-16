@@ -16,9 +16,11 @@ class CategoryController extends Controller
     {
         $cacheKey = 'categories';
         $cacheData = getCachedData($cacheKey, function () {
-        $categories = Category::all();
+        $categories = Category::latest()->get();
         return $categories;
         });
+        clearDashboard();
+
         return response()->json($cacheData);
 
     }

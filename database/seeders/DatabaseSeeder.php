@@ -28,16 +28,12 @@ class DatabaseSeeder extends Seeder
         //  \App\Models\User::factory(200)->create();
         // \App\Models\Category::factory(15)->create();
         //  \App\Models\Product::factory(1000)->create();
-        // \App\Models\Cart::factory(10)->create();
-        // \App\Models\Shipping::factory(200)->create();
-        //   \App\Models\Order::factory(220)->create();
+        \App\Models\Shipping::factory(200)->create();
+    //       \App\Models\Order::factory(220)->create();
     //  \App\Models\Payment::factory(220)->create();
     //      \App\Models\OrderItems::factory(300)->create();
-    //     \App\Models\WishList::factory(10)->create();
-    //     \App\Models\ProductImages::factory(100)->create();
-    //      \App\Models\Review::factory(30)->create();
-        // \App\Models\Comment::factory(20)->create();
-    //     \App\Models\Invoice::factory(200)->create();
+    //      \App\Models\ProductImages::factory(100)->create();
+
     //    \App\Models\Sell::factory(350)->create();
 
 
@@ -54,11 +50,11 @@ class DatabaseSeeder extends Seeder
         //     ProductSeeder::class,
         //     // Other seeders...
         // ]);
-        \App\Models\User::factory()->create([
-            'name' => 'Ans Enq',
-            'email' => 'anas@admin.com',
-            'password' => Hash::make("anas@admin.com"),
-            'is_admin' => true
-        ]);
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Ans Enq',
+        //     'email' => 'anas@admin.com',
+        //     'password' => Hash::make("anas@admin.com"),
+        //     'is_admin' => true
+        // ]);
     }
 }

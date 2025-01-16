@@ -1,5 +1,4 @@
 import { createStore } from "vuex";
-import userActions from "./actions/UserActions";
 import adminActions from "./actions/AdminActions";
 
 const store = createStore({
@@ -13,7 +12,6 @@ const store = createStore({
     getters: {},
     actions: {
       ...adminActions,
-        ...userActions
     },
     mutations: {
         SET_PRODUCTS(state, products) {

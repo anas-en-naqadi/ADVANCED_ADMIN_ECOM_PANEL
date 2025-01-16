@@ -7,7 +7,7 @@
       <Button
         type="button"
         icon="pi pi-add"
-        label="Nouveau utilisateur"
+        label="new User"
         class="p-button-outlined bg-white py-2 px-4 mr-6 border border-black rounded-md text-black hover:text-white hover:bg-black"
         @click="visible2 = true"
       />
@@ -193,7 +193,7 @@
                   />
                 </svg>
               </button>
-              <button @click="setToAdmin(data.id)" title="Mettre comme admin">
+              <button v-if="!data.is_admin" @click="setToAdmin(data.id)" title="Mettre comme admin">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -283,12 +283,12 @@
     <Dialog
       v-model:visible="visible1"
       modal
-      header="Ajouter aux Blacklist"
+      header="Add to Blacklist"
       :style="{ width: '30rem' }"
     >
       <div class="flex-col gap-5">
         <div class="flex mt-1 gap-2">
-        <label for="reason" class="font-semibold w-6rem">Raison:</label>
+        <label for="reason" class="font-semibold w-6rem">Reason:</label>
         <Textarea
           v-model="reason"
           autoResize

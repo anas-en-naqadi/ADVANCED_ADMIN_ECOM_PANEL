@@ -28,8 +28,11 @@ class ProductController extends Controller
             }
 
         }
+
         return $products;
     });
+        clearDashboard();
+
     return response()->json($cacheData);
     }
 
@@ -47,7 +50,7 @@ class ProductController extends Controller
         }
         // $validatedData['user_id'] = getSimpleUser()->id;
         Product::create($validatedData);
-        Redis::del('key');
+        Redis::del('products');
         return response()->json(['message' => 'Product added successfully']);
     }
 
@@ -69,7 +72,7 @@ class ProductController extends Controller
 
         // Update the product
         $product->update($validatedData);
-        Redis::del('key');
+        Redis::del('products');
         return response()->json(['message' => 'product item updated successfully']);
     }
 
@@ -93,7 +96,7 @@ class ProductController extends Controller
             if ($product->image) {
                 File::delete(public_path($product->image));
             }
-            Redis::del('key');
+        Redis::del('products');
             return response()->json(['message' => 'product deleted successfully']);
         } catch (ModelNotFoundException $exception) {
             return response()->json(['message' => 'product not found'], 404);

@@ -16,7 +16,7 @@
                         class="flex rounded-md flex-col gap-10 justify-start items-start white:bg-gray-800 bg-white px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                         <p
                             class="text-lg md:text-xl white:text-white font-semibold leading-6 xl:leading-5 text-gray-800">
-                            Status de commande
+                            Order Status
                         </p>
                         <div class="w-full ">
                             <Steps :model="items" class="custom-steps " :readonly="false">
@@ -45,7 +45,7 @@
                         class="flex flex-col justify-start items-start white:bg-gray-800 bg-white rounded-md px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                         <p
                             class="text-lg md:text-xl white:text-white font-semibold leading-6 xl:leading-5 text-gray-800">
-                            produits de commande
+                            Order Products
                         </p>
                         <div
                             class="mt-4 md:mt-6 flex flex-col md:flex-row overflow-x-auto justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
@@ -113,17 +113,16 @@
                                     </p>
                                     <p class="text-base white:text-gray-300 leading-4 text-gray-600">
                                         {{ common.formatNumber(order.payment.amount) }}
-                                        MAD
+                                        DH
                                     </p>
                                 </div>
                                 <div class="flex justify-between items-center w-full">
                                     <p class="text-base white:text-white leading-4 text-gray-800">
                                         Discount
-                                        <span
-                                            class="bg-gray-200 p-1 text-xs font-medium white:bg-white white:text-gray-800 leading-3 text-gray-800">STUDENT</span>
+                                        
                                     </p>
                                     <p class="text-base white:text-gray-300 leading-4 text-gray-600">
-                                        -$28.00 (50%)
+                                        50%
                                     </p>
                                 </div>
                                 <div class="flex justify-between items-center w-full">
@@ -131,7 +130,7 @@
                                         Shipping
                                     </p>
                                     <p class="text-base white:text-gray-300 leading-4 text-gray-600">
-                                        $8.00
+                                        8.00 DH
                                     </p>
                                 </div>
                             </div>
@@ -148,11 +147,11 @@
                         <div
                             class="flex flex-col justify-center px-4 py-6 md:p-6 xl:p-8 w-full bg-white rounded-md white:bg-gray-800 space-y-6">
                             <h3 class="text-xl white:text-white font-semibold leading-5 text-gray-800">
-                                Etat Finale du commande
+                                Final Order Status
                             </h3>
                             <select v-model="status"
                                 class="block py-2.5 px-2.5 w-full rounded-md text-sm text-black bg-transparent border-2 border-gray-500  focus:outline-none focus:ring-0 focus:border-gray-300 peer">
-                                <option selected value="null">Choose status</option>
+                                <option selected :value="null">Choose status</option>
                                 <option value="completed">
                                     completed
                                 </option>
@@ -220,10 +219,10 @@
                                     <div>
                                         <p
                                             class="w-48 lg:w-full white:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
-                                            {{ order.customer.default_shipping_address.address }}, {{
-                                                order.customer.default_shipping_address.city }}
-                                            {{ order.customer.default_shipping_address.country }}
-                                            {{ order.customer.default_shipping_address.postal_code }}
+                                            {{ order.customer?.default_shipping_address?.address }}, {{
+                                                order.customer?.default_shipping_address?.city }}
+                                            {{ order.customer?.default_shipping_address?.country }}
+                                            {{ order.customer?.default_shipping_address?.postal_code }}
                                         </p>
                                     </div>
                                 </div>
@@ -260,7 +259,7 @@
                         class="flex flex-col gap-3 justify-center items-center white:bg-gray-800 bg-white px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                         <p
                             class="text-lg text-left md:text-xl white:text-white font-semibold leading-6 xl:leading-5 text-gray-800">
-                            Status de commande
+                            Order Status
                         </p>
                         <div class="w-min">
                             <Skeleton width="40rem" class="mx-18 -mb-10" height="16rem"></Skeleton>
@@ -270,7 +269,7 @@
                         class="flex flex-col justify-start items-start white:bg-gray-800 bg-white px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                         <p
                             class="text-lg md:text-xl white:text-white font-semibold leading-6 xl:leading-5 text-gray-800">
-                            produits de commande
+                            Order Products
                         </p>
                         <div
                             class="mt-4 md:mt-6 flex flex-col md:flex-row overflow-x-auto justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
@@ -350,7 +349,7 @@
                         <div
                             class="flex flex-col justify-center px-4 py-6 md:p-6 xl:p-8 w-full bg-white white:bg-gray-800 space-y-6">
                             <h3 class="text-xl white:text-white font-semibold leading-5 text-gray-800">
-                                Etat Finale du commande
+                                Final Order Status
                             </h3>
                             <div class="flex justify-between items-start w-full">
 
@@ -372,7 +371,7 @@
                         <div class="flex flex-col justify-start items-start flex-shrink-0">
                             <div
                                 class="flex justify-center w-full md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
-                                <Skeleton size="5rem" shape="circle"></Skeleton>
+                                <Skeleton width="5rem" height="5rem" shape="circle"></Skeleton>
                                 <Skeleton></Skeleton>
                             </div>
 
@@ -431,7 +430,6 @@ import { useToast } from "primevue/usetoast";
 
 const order = ref({});
 const status = ref(null);
-const router = useRouter();
 const route = useRoute();
 const toast =useToast();
 const loading = ref(true);
@@ -444,6 +442,10 @@ let items = [
 onMounted(() => {
     fetchOrderById();
 });
+function findItem(status){
+  const index =  items.findIndex((i) => i.label.toLocaleLowerCase() === status);
+  items[index].active = true;
+}
 function fetchOrderById() {
     var id = route.params.id;
 
@@ -453,9 +455,7 @@ function fetchOrderById() {
             if (res.status === 200 && res.data) {
                 order.value = res.data;
                 status.value = res.data.status;
-                items.map((item) => {
-                    item.active = order.value.status === item.label.toLowerCase();
-                });
+                findItem(status.value);
                 loading.value = false;
 
             }

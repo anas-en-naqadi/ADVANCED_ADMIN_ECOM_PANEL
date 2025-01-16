@@ -23,22 +23,26 @@ class OrderController extends Controller
     {
         $cacheKey = 'orders';
         $cacheData = getCachedData($cacheKey, function () {
-        $orders = Order::with(['payment', 'customer'])->get();
+        $orders = Order::with(['payment', 'customer'])->latest()->get();
         return $orders;
         });
+        clearDashboard();
+
         return response()->json($cacheData);
 
     }
 
     public function show($id)
     {
-        $order = Order::with(['payment', 'items', 'customer.defaultShippingAddress'])->findOrFail($id);
+        $order = Order::with(['payment', 'items.product', 'customer.defaultShippingAddress'])->findOrFail($id);
 
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
-
+        foreach ($order->items as $item) {
+            $item->product->image_url = $item->product->image_url; // This will set the full image URL
+        }
 
         $order->customer->totalOrders = $order->customer->orders->count();
         unset($order->customer->orders);

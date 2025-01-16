@@ -7,7 +7,7 @@
       <router-link
         :to="{name:'action-invoice'}"
         class="p-button-outlined h-10 bg-white py-2 px-3 mr-6 border border-black rounded-md text-black hover:text-white hover:bg-black"
-      >+ nouveau facture</router-link>
+      >+ new Invoice</router-link>
     </div>
     <!-- Main Data Table -->
     <div v-if="!loading">

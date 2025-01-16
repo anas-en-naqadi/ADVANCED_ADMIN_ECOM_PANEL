@@ -56,7 +56,7 @@
                     </template>
                 </Column>
 
-                <Column field="created_at" class="border-b-[1px] text-center" header="creer a">
+                <Column field="created_at" class="border-b-[1px] text-center" sortable header="creer a">
                     <template #body="{ data }">
                         <span>{{ common.formatDate(data.created_at) }}</span>
                     </template>
@@ -142,7 +142,7 @@ import store from "../../store";
 import Avatar from "vue-avatar-component";
 import { ref, onMounted } from "vue";
 import common from "../../utils/common";
-const blacklist = ref([]);
+const blacklists = ref([]);
 const visible = ref(false);
 const loading = ref(false);
 const filteredBlacklist = ref([]);
@@ -155,15 +155,15 @@ onMounted(() => {
 
 function clearFilter() {
     document.getElementById("searchInput").value = "";
-    filteredBlacklist.value = users.value;
+    filteredBlacklist.value = blacklists.value;
 }
 function fetchBlacklist() {
     loading.value = true;
     store
         .dispatch("getBlacklist")
         .then((res) => {
-            blacklist.value = res;
-            filteredBlacklist.value = [...blacklist.value];
+            blacklists.value = res;
+            filteredBlacklist.value = [...blacklists.value];
         })
         .catch((error) => console.error(error))
         .finally(() => {
@@ -174,12 +174,12 @@ function fetchBlacklist() {
 function filterTable(event) {
     const filter = event.target.value.toLowerCase();
 
-    if (!filter) filteredUsers.value = users.value;
+    if (!filter) filteredBlacklist.value = blacklists.value;
     else
-        filteredUsers.value = users.value.filter(
+        filteredBlacklist.value = blacklists.value.filter(
             (u) =>
-                u.name.toLowerCase().includes(filter) ||
-                u.email.toLowerCase().includes(filter)
+                u.user.name.toLowerCase().includes(filter) ||
+                u.user.email.toLowerCase().includes(filter)
         );
 }
 
@@ -188,6 +188,7 @@ function filterTable(event) {
 
 
 function removeBlacklist(id) {
+    console.log(id)
     common
         .showSwal({
             title: "Are you sure?",
