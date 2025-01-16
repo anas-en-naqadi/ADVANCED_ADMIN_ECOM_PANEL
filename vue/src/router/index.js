@@ -11,14 +11,7 @@ const routes = [
         },
         component: () => import("@/views/auth/Login.vue"),
     },
-    {
-        path: "/register",
-        name: "register",
-        meta: {
-            title: "Register - ALMOBARKA",
-        },
-        component: () => import("@/views/auth/Register.vue"),
-    },
+   
     {
         path: "/:pathMatch(.*)",
         component: () => import("@/components/NotFound.vue"),

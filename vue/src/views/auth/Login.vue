@@ -72,12 +72,7 @@
                 </div>
             </form>
 
-            <p class="mt-10 text-center text-sm text-gray-500">
-                Not a member?
-                {{ " " }}
-                <a href="/register"
-                    class="font-semibold leading-6 text-green-600 hover:text-green-500 hover:underline">Register</a>
-            </p>
+           
         </div>
     </div>
 </template>
