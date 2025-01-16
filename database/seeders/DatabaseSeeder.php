@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -36,8 +37,8 @@ class DatabaseSeeder extends Seeder
     //     \App\Models\ProductImages::factory(100)->create();
     //      \App\Models\Review::factory(30)->create();
         // \App\Models\Comment::factory(20)->create();
-        \App\Models\Invoice::factory(200)->create();
-       \App\Models\Sell::factory(350)->create();
+    //     \App\Models\Invoice::factory(200)->create();
+    //    \App\Models\Sell::factory(350)->create();
 
 
 
@@ -53,9 +54,11 @@ class DatabaseSeeder extends Seeder
         //     ProductSeeder::class,
         //     // Other seeders...
         // ]);
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Ans Enq',
+            'email' => 'anas@admin.com',
+            'password' => Hash::make("anas@admin.com"),
+            'is_admin' => true
+        ]);
     }
 }

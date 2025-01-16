@@ -1,10 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import AdminRouter from "./AdminRouter";
 import store from "../store";
-import UserRouter from "./UserRouter";
 const routes = [
     ...AdminRouter,
-    ...UserRouter,
     {
         path: "/login",
         name: "login",
@@ -66,7 +64,7 @@ router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !sessionStorage.getItem("TOKEN")) {
         next({ name: "login" });
     } else if (!sessionStorage.getItem("TOKEN") && to.meta.isGuest) {
-        next({ name: "home" });
+        next({ name: "login" });
     } else if (sessionStorage.getItem("TOKEN") && to.name === "login") {
         if(store.state.user.is_admin)
         next({ name: "dashboard" });
